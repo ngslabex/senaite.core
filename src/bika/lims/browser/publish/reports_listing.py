@@ -82,8 +82,8 @@ class ReportsListingView(ListingView):
                 "title": _("Filesize")},),
             ("Date", {
                 "title": _("Published Date")},),
-#            ("PublishedBy", {
-#                "title": _("Published By")},),
+            ("PublishedBy", {
+                "title": _("Published By")},),
             ("Sent", {
                 "title": _("Email sent"),
                 "sortable": False},),

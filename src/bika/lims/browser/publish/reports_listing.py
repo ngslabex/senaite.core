@@ -78,8 +78,8 @@ class ReportsListingView(ListingView):
                 "title": _("Review State")},),
             ("PDF", {
                 "title": _("Download PDF")},),
-            ("FileSize", {
-                "title": _("Filesize")},),
+#            ("FileSize", {
+#                "title": _("Filesize")},),
             ("Date", {
                 "title": _("Published Date")},),
             ("PublishedBy", {

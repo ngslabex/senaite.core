@@ -4,6 +4,25 @@ Changelog
 2.6.0 (unreleased)
 ------------------
 
+- #2647 Fix analysis instrument is not auto-assigned on change in worksheet
+- #2643 Improve performance of analysis verification
+- #2645 Tabbed content view
+- #2624 Added "Maximum holding time" setting to services and analyses
+- #2637 Do not remove inactive services from profiles and templates
+- #2642 Fix Attribute Error in Upgrade Step 2619
+- #2641 Fix AttributeError on rejection of samples without a contact set
+- #2640 Fix missing custom transitions via adapter in Worksheet's analyses
+- #2639 Fix sampletype-related indexes for AnalysisSpec type are not indexed
+- #2638 Fix AttributeError on upgrade step 2654 (reindex_getDueDate)
+- #2569 Fix samples are indicated as late when Turnaround Time is zero
+- #2636 Fix JS Error in WS Template edit form
+- #2635 Remove reindexing of Analyses and Analysis Services on Category change
+- #2599 Migrate WorksheetTemplates to Dexterity
+- #2632 Refactor Catalog Indexing
+- #2630 Fix references from sample templates are not kept when partitioning
+- #2634 Pin et-xmlfile to a Python 2 compatible version
+- #2631 Fix for sending email attachment if filename contain spaces
+- #2633 Fix DateTimeError when using API's to_DT and to_dt functions
 - #2629 Fix default sticker template based on sample type is not rendered
 - #2627 Skip workflow transition for temporary analyses
 - #2626 Change to new instrument imports that were introduced with #2555

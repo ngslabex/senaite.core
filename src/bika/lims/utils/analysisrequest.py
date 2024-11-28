@@ -41,7 +41,6 @@ from bika.lims.utils import get_link
 from bika.lims.utils import tmpID
 from bika.lims.workflow import doActionFor
 from DateTime import DateTime
-from Products.Archetypes.config import UID_CATALOG
 from Products.Archetypes.event import ObjectInitializedEvent
 from Products.CMFPlone.utils import _createObjectByType
 from senaite.core.catalog import SETUP_CATALOG
@@ -158,7 +157,7 @@ def create_analysisrequest(client, request, values, analyses=None,
     # unmark the sample as temporary
     api.unmark_temporary(ar)
     # explicit reindexing after sample finalization
-    reindex(ar)
+    api.catalog_object(ar)
     # notify object initialization (also creates a snapshot)
     event.notify(ObjectInitializedEvent(ar))
 
@@ -167,18 +166,6 @@ def create_analysisrequest(client, request, values, analyses=None,
         do_rejection(ar)
 
     return ar
-
-
-def reindex(obj, recursive=False):
-    """Reindex the object
-
-    :param obj: The object to reindex
-    :param recursive: If true, all child objects are reindexed recursively
-    """
-    obj.reindexObject()
-    if recursive:
-        for child in obj.objectValues():
-            reindex(child)
 
 
 def receive_sample(sample, check_permission=False, date_received=None):
@@ -278,14 +265,6 @@ def to_services_uids(services=None, values=None):
 
     # Convert them to a list of service uids
     uids = filter(None, map(to_service_uid, uids))
-
-    # Extend with service uids from profiles
-    profiles = to_list(values.get("Profiles"))
-    if profiles:
-        uid_catalog = api.get_tool(UID_CATALOG)
-        for brain in uid_catalog(UID=profiles):
-            profile = api.get_object(brain)
-            uids.extend(profile.getServiceUIDs() or [])
 
     # Get the service uids without duplicates, but preserving the order
     return list(OrderedDict.fromkeys(uids).keys())
@@ -586,6 +565,7 @@ def get_rejection_email_recipients(sample):
     """
     # extract the emails from contacts
     contacts = [sample.getContact()] + sample.getCCContact()
+    contacts = filter(None, contacts)
     emails = map(lambda contact: contact.getEmailAddress(), contacts)
 
     # extend with the CC emails

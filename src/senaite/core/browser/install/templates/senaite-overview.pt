@@ -16,7 +16,7 @@
           tal:attributes="href string:${context/absolute_url}/++plone++senaite.core.static/modules/bootstrap/css/bootstrap.min.css"
           href="bootstrap.min.css" />
     <link href="favicon.ico" rel="icon" type="image/x-icon"
-          tal:attributes="href string:${context/absolute_url}/++plone++senaite.core.static/images/favicon.ico"/>
+          tal:attributes="href string:${context/absolute_url}/++plone++senaite.core.static/images/ecegen-logo.svg"/>
   </head>
 
   <body tal:define="sites view/sites">
@@ -30,7 +30,7 @@
             <h1>
               <img src="senaite-logo.png"
                    height="30"
-                   tal:attributes="src string:${context/absolute_url}/++plone++senaite.core.static/images/senaite.svg" />
+                   tal:attributes="src string:${context/absolute_url}/++plone++senaite.core.static/images/ecegen-logo.svg" />
               <small class="lead">Enterprise Open Source Laboratory System</small>
             </h1>
             <hr/>

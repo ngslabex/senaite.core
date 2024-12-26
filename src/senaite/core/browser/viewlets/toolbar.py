@@ -31,7 +31,7 @@ from senaite.core.browser.viewlets.sections import GlobalSectionsViewlet
 from zope.component import getMultiAdapter
 from zope.component import getUtility
 
-LOGO = "/++plone++senaite.core.static/images/senaite.svg"
+LOGO = "/++plone++senaite.core.static/images/ecegen-logo.svg"
 
 
 class ToolbarViewletManager(OrderedViewletManager):

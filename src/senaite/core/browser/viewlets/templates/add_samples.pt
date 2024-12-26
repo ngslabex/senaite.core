@@ -19,7 +19,7 @@
           <img src="#"
                style="height:16px;"
                tal:attributes="src view/theme_view/icon_url/plus"/>
-          <span tal:omit-tag="python:1" i18n:translate="">Add Samples</span>
+          <span tal:omit-tag="python:1" i18n:translate="">Numune Ekle</span>
         </button>
       </span>
     </span>

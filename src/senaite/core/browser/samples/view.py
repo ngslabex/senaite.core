@@ -85,7 +85,7 @@ class SamplesView(ListingView):
         self.contentFilter = {
             "sort_on": "created",
             "sort_order": "descending",
-            "isRootAncestor": False,  # only root ancestors
+            "isRootAncestor": True,  # only root ancestors
         }
 
         self.title = self.context.translate(_("Samples"))

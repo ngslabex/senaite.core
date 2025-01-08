@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-12-21 09:58+0000\n"
-"PO-Revision-Date: 2024-07-03 12:22+0300\n"
+"PO-Revision-Date: 2024-12-30 23:34+0300\n"
 "Last-Translator: Jordi Puiggené <jpuiggene@naralabs.com>, 2022\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/senaite/teams/87045/tr_TR/)\n"
 "Language: tr_TR\n"
@@ -426,7 +426,7 @@ msgstr "Test Anahtar Kelimesi"
 
 #: bika/lims/profiles/default/types/AnalysisProfile.xml
 msgid "Analysis Profile"
-msgstr "Test Profili"
+msgstr "Test Hizmeti"
 
 #: bika/lims/browser/analysisrequest/templates/invoice_content.pt:93
 #: bika/lims/browser/client/views/analysisprofiles.py:50
@@ -445,7 +445,7 @@ msgstr "Test Raporları"
 
 #: bika/lims/browser/publish/emailview.py:303
 msgid "Analysis Results for {}"
-msgstr "Test Sonucu {}"
+msgstr "ECEGEN Sonuç {}"
 
 #: bika/lims/browser/fields/referenceresultsfield.py:34
 #: bika/lims/browser/fields/resultrangefield.py:32
@@ -639,7 +639,7 @@ msgstr ""
 
 #: bika/lims/content/artemplate.py:241
 msgid "Auto-partition on receive"
-msgstr ""
+msgstr "Numune kabulünde Otomatik Eşleştir"
 
 #: bika/lims/content/bikasetup.py:569
 msgid "Auto-receive samples"
@@ -671,7 +671,7 @@ msgstr "Yeni bir kurum oluşturulduğunda otomatik olarak yeni bir genel kurum g
 
 #: bika/lims/content/artemplate.py:242
 msgid "Automatically redirect the user to the partitions creation view when Sample is received."
-msgstr ""
+msgstr "Örnek alındığında kullanıcıyı otomatik olarak numune eşleştirme görünümüne yönlendir."
 
 #: bika/lims/content/analysisservice.py:79
 msgid "Available instruments based on the selected methods."
@@ -749,7 +749,7 @@ msgstr "Etki"
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:539
 msgid "Biannual"
-msgstr ""
+msgstr "İki yılda bir"
 
 #: senaite/core/z3cform/widgets/address.py:122
 msgid "Billing address"
@@ -1174,7 +1174,7 @@ msgstr "Bileşim"
 
 #: bika/lims/content/artemplate.py:109
 msgid "Composite sample"
-msgstr ""
+msgstr "Bileşik örnek"
 
 #: bika/lims/content/analysisservice.py:267
 msgid "Conditions to ask for this analysis on sample registration. For instance, laboratory may want the user to input the temperature, the ramp and flow when a thermogravimetric (TGA) analysis is selected on sample registration. The information provided will be later considered by the laboratory personnel when performing the test."
@@ -1403,7 +1403,7 @@ msgstr ""
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:535
 msgid "Daily"
-msgstr ""
+msgstr "Günlük"
 
 #: bika/lims/content/instrument.py:215
 msgid "Data Interface"
@@ -1867,7 +1867,7 @@ msgstr "Bekleyen"
 
 #: senaite/core/browser/samples/view.py:124
 msgid "Due Date"
-msgstr "Tahmini Tarih"
+msgstr "Tahmini Sonuç Tarih"
 
 #: bika/lims/controlpanel/bika_analysisservices.py:200
 msgid "Dup Var"
@@ -2014,7 +2014,7 @@ msgstr ""
 
 #: bika/lims/content/artemplate.py:119
 msgid "Enable sampling workflow for the created sample"
-msgstr ""
+msgstr "Oluşturulan numune için numune alma iş akışını etkinleştirin"
 
 #: bika/lims/content/bikasetup.py:536
 msgid "Enable the Results Report Printing workflow"
@@ -2088,7 +2088,7 @@ msgstr ""
 
 #: bika/lims/content/analysisrequest.py:931
 msgid "Environmental conditions"
-msgstr "Çevre Koşulları"
+msgstr "Endikasyonlar"
 
 #: bika/lims/browser/workflow/analysisrequest.py:210
 msgid "Erroneous result publication: ${sample_id}"
@@ -2096,15 +2096,15 @@ msgstr "Hatalı sonuç düzeltme: ${sample_id}"
 
 #: senaite/core/browser/dashboard/dashboard.py:579
 msgid "Evolution of Analyses"
-msgstr ""
+msgstr "Testlerin Durumu"
 
 #: senaite/core/browser/dashboard/dashboard.py:471
 msgid "Evolution of Samples"
-msgstr ""
+msgstr "Numune Durumu"
 
 #: senaite/core/browser/dashboard/dashboard.py:522
 msgid "Evolution of Worksheets"
-msgstr ""
+msgstr "Çalışma Sayfalarının Durumu"
 
 #: senaite/core/exportimport/import.pt:166
 msgid "Example Cronjob to execute the auto import every 10 minutes"
@@ -3064,7 +3064,7 @@ msgstr "Erkek"
 
 #: bika/lims/profiles/default/types/Client.xml
 msgid "Manage Access"
-msgstr ""
+msgstr "Erişim Yetkisi"
 
 #: bika/lims/browser/analysisrequest/templates/analysisrequest_analyses.pt:14
 #: bika/lims/profiles/default/types/AnalysisRequest.xml
@@ -3073,7 +3073,7 @@ msgstr "Testleri Düzenle"
 
 #: bika/lims/browser/analysisrequest/templates/ar_add2.pt:374
 msgid "Manage Form Fields"
-msgstr ""
+msgstr "Form Alanlarını Düzenle"
 
 #: senaite/core/browser/idserver/templates/numbergenerator.pt:12
 msgid "Manage Numbergenerator"
@@ -3286,7 +3286,7 @@ msgstr "Cep Telefonu"
 
 #: bika/lims/browser/client/views/contacts.py:76
 msgid "MobilePhone"
-msgstr ""
+msgstr "Cep Telefonu"
 
 #: bika/lims/content/instrument.py:136
 #: bika/lims/controlpanel/bika_instruments.py:84
@@ -3303,7 +3303,7 @@ msgstr ""
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:537
 msgid "Monthly"
-msgstr ""
+msgstr "Aylık"
 
 #: bika/lims/skins/bika/bika_widgets/rejectionsetupwidget.pt:59
 msgid "More"
@@ -3656,7 +3656,7 @@ msgstr ""
 
 #: bika/lims/browser/templates/analysisreport_info.pt:51
 msgid "Orientation"
-msgstr ""
+msgstr "Sayfa Oryantasyonu"
 
 #: bika/lims/skins/bika/bika_widgets/combobox.pt:92
 msgid "Other Value:"
@@ -3690,7 +3690,7 @@ msgstr ""
 
 #: bika/lims/browser/templates/analysisreport_info.pt:42
 msgid "Paperformat"
-msgstr ""
+msgstr "Sayfa Formatı"
 
 #: senaite/core/browser/samples/templates/partition_magic.pt:125
 msgid "Partition"
@@ -4069,7 +4069,7 @@ msgstr ""
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:538
 msgid "Quarterly"
-msgstr ""
+msgstr "Üçaylık"
 
 #: bika/lims/content/abstractbaseanalysis.py:516
 msgid "Range max"
@@ -4581,7 +4581,7 @@ msgstr "Numune Ret"
 #: bika/lims/controlpanel/bika_artemplates.py:63
 #: bika/lims/profiles/default/types/Client.xml
 msgid "Sample Templates"
-msgstr ""
+msgstr "Test Şablonları"
 
 #: senaite/core/browser/samples/templates/partition_magic.pt:145
 #: senaite/core/browser/samples/view.py:176
@@ -4602,7 +4602,7 @@ msgstr ""
 
 #: bika/lims/content/artemplate.py:118
 msgid "Sample collected by the laboratory"
-msgstr ""
+msgstr "Laboratuvarda alınan numune"
 
 #: bika/lims/browser/analysisrequest/add2.py:1615
 msgid "Sample creation cancelled"
@@ -4618,7 +4618,7 @@ msgstr ""
 
 #: senaite/core/browser/dashboard/dashboard.py:630
 msgid "Sample received"
-msgstr ""
+msgstr "Devam Ediyor..."
 
 #: bika/lims/browser/analysisrequest/templates/analysisrequest_retract_pdf.pt:100
 msgid "Sample type"
@@ -4824,7 +4824,7 @@ msgstr ""
 
 #: bika/lims/content/artemplate.py:288
 msgid "Select analyses to include in this template"
-msgstr ""
+msgstr "Bu şablona dahil edilecek analizleri seçin"
 
 #: bika/lims/browser/worksheet/templates/worksheets.pt:41
 msgid "Select analyst"
@@ -5424,7 +5424,7 @@ msgstr ""
 
 #: bika/lims/content/analysisrequest.py:932
 msgid "The environmental condition during sampling"
-msgstr "Numune alma sırasındaki çevre koşulları"
+msgstr "Hastanın genetik test yapılmasını gerektiren tıbbi durum veya belirti ve bulgulara dayalı tanı veya tedaviye yönelik gerekçesi."
 
 #: senaite/core/browser/samples/templates/manage_sample_fields.pt:104
 msgid "The fields are always listed on top and can not be faded out. You can drag and drop any fields to the lower list to change thier visibility."
@@ -5533,7 +5533,7 @@ msgstr ""
 
 #: bika/lims/content/artemplate.py:110
 msgid "The sample is a mix of sub samples"
-msgstr ""
+msgstr "Örnek, alt örneklerin bir bileşimidir."
 
 #: bika/lims/content/instrument.py:145
 msgid "The serial number that uniquely identifies the instrument"
@@ -5565,7 +5565,7 @@ msgstr ""
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:548
 msgid "There is no available data for the selected period"
-msgstr ""
+msgstr "Seçilen dönem için kullanılabilir veri yok"
 
 #: bika/lims/skins/bika/bika_widgets/rejectionsetupwidget.pt:33
 msgid "These reasons will be displayed for its selection during the rejection process."
@@ -6205,7 +6205,7 @@ msgstr ""
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:536
 msgid "Weekly"
-msgstr ""
+msgstr "Haftalık"
 
 #: bika/lims/controlpanel/bika_instruments.py:91
 msgid "Weeks To Expire"
@@ -6285,7 +6285,7 @@ msgstr ""
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:540
 msgid "Yearly"
-msgstr ""
+msgstr "Yıllık"
 
 #: senaite/core/browser/controlpanel/samplecontainers.py:129
 msgid "Yes"
@@ -6337,7 +6337,7 @@ msgstr "Etkinleştir"
 
 #: bika/lims/content/instrumentcertification.py:254
 msgid "biannually"
-msgstr ""
+msgstr "İki yılda bir"
 
 #: bika/lims/browser/worksheet/templates/print/ar_by_column.pt:48
 #: bika/lims/browser/worksheet/templates/print/ar_by_row.pt:48
@@ -6346,7 +6346,7 @@ msgstr ""
 
 #: bika/lims/content/instrumentcertification.py:250
 msgid "daily"
-msgstr ""
+msgstr "günlük"
 
 #. Default: "${Y}-${m}-${d} ${I}:${M} ${p}"
 #. The variables used here are the same as used in the strftime formating.
@@ -6474,17 +6474,17 @@ msgstr ""
 #. Default: "Select the analysis profile for this template"
 #: bika/lims/content/artemplate.py:257
 msgid "description_artemplate_profile"
-msgstr ""
+msgstr "Bu şablon için test hizmetini seçin"
 
 #. Default: "Select the sample point for this template"
 #: bika/lims/content/artemplate.py:58
 msgid "description_artemplate_samplepoint"
-msgstr ""
+msgstr "Bu şablon için örnek alım noktasını seçin"
 
 #. Default: "Select the sample type for this template"
 #: bika/lims/content/artemplate.py:89
 msgid "description_artemplate_sampletype"
-msgstr ""
+msgstr "Bu şablon için örnek türünü seçin"
 
 #. Default: "Select the type of the attachment"
 #: bika/lims/content/attachment.py:64
@@ -6958,7 +6958,7 @@ msgstr "Birincil Örnek"
 #. Default: "Analysis Profile"
 #: bika/lims/content/artemplate.py:254
 msgid "label_artemplate_profile"
-msgstr ""
+msgstr "Test Hizmetleri"
 
 #. Default: "Sample Point"
 #: bika/lims/content/artemplate.py:55
@@ -7353,7 +7353,7 @@ msgstr ""
 
 #: bika/lims/content/instrumentcertification.py:252
 msgid "monthly"
-msgstr ""
+msgstr "aylık"
 
 #: senaite/core/browser/dashboard/dashboard.py:377
 msgid "of"
@@ -7365,7 +7365,7 @@ msgstr ""
 
 #: bika/lims/content/instrumentcertification.py:253
 msgid "quarterly"
-msgstr ""
+msgstr "üçaylık"
 
 #: bika/lims/content/instrumentscheduledtask.py:137
 msgid "repeating every"
@@ -7483,7 +7483,7 @@ msgstr "bitiş tarihi"
 
 #: senaite/core/browser/dashboard/templates/dashboard.pt:532
 msgid "updated every 2 hours"
-msgstr ""
+msgstr "her 2 saatte bir güncellenir"
 
 #: bika/lims/browser/analyses/view.py:1458
 msgid "verification(s) pending"
@@ -7491,11 +7491,11 @@ msgstr ""
 
 #: bika/lims/content/instrumentcertification.py:251
 msgid "weekly"
-msgstr ""
+msgstr "haftalık"
 
 #: bika/lims/content/instrumentcertification.py:255
 msgid "yearly"
-msgstr ""
+msgstr "yıllık"
 
 #: bika/lims/browser/analyses/view.py:587
 msgid "{} (Out of date)"

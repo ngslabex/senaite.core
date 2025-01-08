@@ -1,22 +1,18 @@
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI +ZONE\n"
-"PO-Revision-Date: 2024-12-31 00:05+0300\n"
-"Last-Translator: \n"
-"Language-Team: Turkish (Turkey) (https://app.transifex.com/senaite/"
-"teams/87045/tr_TR/)\n"
-"Language: tr_TR\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
-"X-Generator: Poedit 3.4.2\n"
 
 #: senaite/core/browser/user/templates/account-panel.pt:16
 msgid "${action/title}"
@@ -65,7 +61,7 @@ msgstr ""
 #: senaite/core/browser/dexterity/templates/macros.pt:20
 #: senaite/core/browser/login/templates/login.pt:17
 msgid "Error"
-msgstr "Hata"
+msgstr ""
 
 #: senaite/core/browser/contentrules/templates/controlpanel.pt:78
 msgid "Filter:"
@@ -76,9 +72,7 @@ msgid "Go to parent folder"
 msgstr ""
 
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:222
-msgid ""
-"Go to the folder where you want the rule to apply, or at the site root, "
-"click on 'rule' tab, and then locally setup the rules."
+msgid "Go to the folder where you want the rule to apply, or at the site root, click on 'rule' tab, and then locally setup the rules."
 msgstr ""
 
 #: senaite/core/browser/controlpanel/templates/overview.pt:32
@@ -87,7 +81,7 @@ msgstr ""
 
 #: senaite/core/browser/viewlets/templates/path_bar.pt:9
 msgid "Home"
-msgstr "Anasayfa"
+msgstr ""
 
 #: senaite/core/browser/dexterity/templates/macros.pt:26
 #: senaite/core/browser/portlets/templates/manage-contextual.pt:38
@@ -152,11 +146,7 @@ msgid "Search for user or group"
 msgstr ""
 
 #: senaite/core/profiles/default/registry.xml
-msgid ""
-"Select which formats are available for users as alternative to the default "
-"format. Note that if new formats are installed, they will be enabled for "
-"text fields by default unless explicitly turned off here or by the relevant "
-"installer."
+msgid "Select which formats are available for users as alternative to the default format. Note that if new formats are installed, they will be enabled for text fields by default unless explicitly turned off here or by the relevant installer."
 msgstr ""
 
 #: senaite/core/browser/controlpanel/templates/overview.pt:148
@@ -178,27 +168,19 @@ msgid "The content types that should be shown in the navigation and site map."
 msgstr ""
 
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:218
-msgid ""
-"The rule is enabled but will perform nothing since it is not assigned "
-"anywhere."
+msgid "The rule is enabled but will perform nothing since it is not assigned anywhere."
 msgstr ""
 
 #: senaite/core/browser/controlpanel/templates/overview.pt:32
-msgid ""
-"The site configuration is outdated and needs to be upgraded. Please "
-"${link_continue_with_the_upgrade}."
+msgid "The site configuration is outdated and needs to be upgraded. Please ${link_continue_with_the_upgrade}."
 msgstr ""
 
 #: senaite/core/browser/quickinstaller/templates/quickinstaller.pt:87
-msgid ""
-"There is no upgrade procedure defined for this addon. Please consult the "
-"addon documentation for upgrade information, or contact the addon author."
+msgid "There is no upgrade procedure defined for this addon. Please consult the addon documentation for upgrade information, or contact the addon author."
 msgstr ""
 
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:124
-msgid ""
-"There is not any action performed by this rule. Click on Add button to setup "
-"an action."
+msgid "There is not any action performed by this rule. Click on Add button to setup an action."
 msgstr ""
 
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:39
@@ -214,9 +196,7 @@ msgid "This addon has been upgraded."
 msgstr ""
 
 #: senaite/core/browser/quickinstaller/templates/quickinstaller.pt:23
-msgid ""
-"This is the Add-on configuration section, you can activate and deactivate "
-"add-ons in the lists below."
+msgid "This is the Add-on configuration section, you can activate and deactivate add-ons in the lists below."
 msgstr ""
 
 #: senaite/core/profiles/default/registry.xml
@@ -266,9 +246,7 @@ msgid "Warning"
 msgstr ""
 
 #: senaite/core/browser/contentrules/templates/controlpanel.pt:53
-msgid ""
-"Whether or not content rules should be disabled globally. If this is "
-"selected, no rules will be executed anywhere in the portal."
+msgid "Whether or not content rules should be disabled globally. If this is selected, no rules will be executed anywhere in the portal."
 msgstr ""
 
 #: senaite/core/browser/quickinstaller/templates/quickinstaller.pt:40
@@ -444,7 +422,7 @@ msgstr ""
 #. Default: "Get help"
 #: senaite/core/browser/login/templates/login.pt:105
 msgid "footer_login_link_get_help"
-msgstr "Yardım Sayfası"
+msgstr ""
 
 #. Default: "Sign up here"
 #: senaite/core/browser/login/templates/login.pt:110
@@ -578,7 +556,7 @@ msgstr ""
 #. Default: "Add"
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:105
 msgid "label_add"
-msgstr "Ekle"
+msgstr ""
 
 #. Default: "Add New Group"
 #: senaite/core/browser/usergroup/templates/usergroups_groupsoverview.pt:83
@@ -810,7 +788,7 @@ msgstr ""
 #. Default: "(Required)"
 #: senaite/core/browser/usergroup/templates/usergroups_groupdetails.pt:30
 msgid "label_required"
-msgstr "Gerekli"
+msgstr ""
 
 #. Default: "Event trigger: ${trigger}"
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:285
@@ -1030,7 +1008,7 @@ msgstr ""
 #. Default: "Trouble logging in?"
 #: senaite/core/browser/login/templates/login.pt:104
 msgid "trouble_logging_in"
-msgstr "Girişte sorun mu yaşıyorsunuz?"
+msgstr ""
 
 #: senaite/core/browser/contentrules/templates/controlpanel.pt:153
 msgid "unassigned"

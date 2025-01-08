@@ -511,6 +511,8 @@ class SamplesView(ListingView):
                        """
         item["replace"]["Priority"] = priority_div % (priority, priority_text)
         item["replace"]["getProfilesTitle"] = obj.getProfilesTitleStr
+        item["TestNames"] = "<br>".join([analysis.Title for analysis in ar.getAnalyses()])
+        item["replace"]["getProfilesTitle"] = "<br>".join(obj.getProfilesTitleStr)
 
         # returns a list of
         # [verified, total, not_submitted, to_be_verified]

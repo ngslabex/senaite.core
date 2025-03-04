@@ -15,7 +15,7 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Copyright 2018-2024 by it's authors.
+# Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
 import importlib
@@ -45,6 +45,7 @@ from Products.ATContentTypes.lib.historyaware import HistoryAwareMixin
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFPlone.utils import safe_unicode
+from senaite.core import logger
 from senaite.core.browser.fields.records import RecordsField
 from senaite.core.browser.widgets.referencewidget import ReferenceWidget
 from senaite.core.catalog import SETUP_CATALOG
@@ -439,7 +440,8 @@ class Calculation(BaseFolder, HistoryAwareMixin):
         """
         try:
             mod = importlib.import_module(dotted_name)
-        except ImportError:
+        except ImportError as e:
+            logger.error("Cannot import module %s: %s" % (dotted_name, str(e)))
             return None
 
         members = dict(inspect.getmembers(mod))

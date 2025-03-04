@@ -15,7 +15,7 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Copyright 2018-2024 by it's authors.
+# Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
 import json
@@ -1089,6 +1089,14 @@ class AnalysesView(ListingView):
         item["Calculation"] = calculation_title
         item["replace"]["Calculation"] = calculation_link or _("Manual")
 
+        if is_editable and calculation:
+            url = analysis_brain.getURL()
+            item["after"]["Result"] = item["after"].get("Result") or ""
+            item["after"]["Result"] += get_link(
+                "{}/action/recalculate".format(url),
+                value="<i class='small text-secondary fas fa-sync'></i>",
+                title=t(_("Recalculate")), css_class="listing-ajax-action")
+
         # Set interim fields. Note we add the key 'formatted_value' to the list
         # of interims the analysis has already assigned.
         analysis_obj = self.get_object(analysis_brain)
@@ -1409,9 +1417,16 @@ class AnalysesView(ListingView):
         analysis = self.get_object(analysis_brain)
         results_range = analysis.getResultsRange()
 
-        item["Specification"] = ""
-        if results_range:
-            item["Specification"] = get_formatted_interval(results_range, "")
+        # get the results range interval properly formatted
+        value = get_formatted_interval(results_range, "")
+
+        # for non-floatable analyses, display the comment instead
+        result_type = analysis.getResultType()
+        if result_type not in ["numeric", "string"]:
+            comment = results_range.get("rangecomment")
+            value = comment if comment else value
+
+        item["Specification"] = value
 
     def _folder_item_out_of_range(self, analysis_brain, item):
         """Displays an icon if result is out of range

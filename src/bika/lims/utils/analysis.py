@@ -15,7 +15,7 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Copyright 2018-2024 by it's authors.
+# Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
 import copy
@@ -243,8 +243,8 @@ def format_uncertainty(analysis, decimalmark=".", sciformat=1):
         pass
 
     uncertainty = analysis.getUncertainty()
-    if api.to_float(uncertainty, default=0) <= 0:
-        # uncertainty is not defined or not above 0
+    if api.to_float(uncertainty, default=-1) < 0:
+        # uncertainty is not defined or below 0
         return ""
 
     # always convert exponential notation to decimal

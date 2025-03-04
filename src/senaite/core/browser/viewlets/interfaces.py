@@ -15,7 +15,7 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Copyright 2018-2024 by it's authors.
+# Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
 from zope.viewlet.interfaces import IViewletManager
@@ -43,6 +43,16 @@ class IAboveListingTable(IViewletManager):
 
 class IBelowListingTable(IViewletManager):
     """A viewlet manager that sits below listing tables
+    """
+
+
+class ISampleTitle(IViewletManager):
+    """A viewlet manager in the sample view title section
+    """
+
+
+class ISampleDescription(IViewletManager):
+    """A viewlet manager in the sample view below the title
     """
 
 

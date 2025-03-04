@@ -4,6 +4,26 @@ Changelog
 2.6.0 (unreleased)
 ------------------
 
+- #2681 Add function to make the assignment of custom catalogs easier
+- #2676 Allow to set the uncertainty to 0
+- #2678 Add validate function in API
+- #2677 Fix permission for Uncertainty field
+- #2675 Fix services are not deselected on template removal in sample add form
+- #2673 Trigger recalculation of dependants if uncertainty changes
+- #2674 Fix partitions not displayed correctly in batch samples listing
+- #2672 Fix rejected sample analyses are re-added on profile removal
+- #2670 Flush calculated result if dependency is flushed
+- #2667 Specifications support for multi-result analyses
+- #2668 Paste support for select components in sample add form
+- #2658 Batched sample registration form with Paste capabilities
+- #2666 Allow to delete SENAITE site in ZMI
+- #2665 Do not show "Receive Sample Statusmessage" if sample is already received
+- #2662 Custom catalogs support for default portal types via registry
+- #2652 Fix Subgroups sort by Sort Key
+- #2663 CSS for some add-on based forms
+- #2661 Allow to recalculate an analysis result
+- #2659 Refactor sample title + decsription into viewlets
+- #2660 Add logging if external calculation module import failed
 - #2654 Show Batch title or ID in Sample reference field
 - #2657 Methods from analyses are not updated on instrument change in worksheet
 - #2656 Fix AnalysisProfile keyword validator fail with non-ascii value 

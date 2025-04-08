@@ -29,7 +29,7 @@
           <h1>
             <img src="senaite-logo.png"
                  height="30"
-                 tal:attributes="src string:${context/absolute_url}/++plone++senaite.core.static/images/senaite.svg" />
+                 tal:attributes="src string:${context/absolute_url}/++plone++senaite.core.static/images/ecegen-logo.svg" />
             <small class="lead">Site Installation</small>
           </h1>
           <hr/>

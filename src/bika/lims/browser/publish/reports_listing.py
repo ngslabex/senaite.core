@@ -72,14 +72,18 @@ class ReportsListingView(ListingView):
             ("AnalysisRequest", {
                 "title": _("Primary Sample"),
                 "index": "sortable_title"},),
-            ("Batch", {
-                "title": _("Batch")},),
+#            ("Batch", {
+#                "title": _("Batch")},),
+            ("PatientFullName", {
+                "title": _("Hasta Adi")},),  # New column added here
+            ("TestNames", {
+                "title": _("Profile")},),  # New column added here
             ("State", {
                 "title": _("Review State")},),
             ("PDF", {
                 "title": _("Download PDF")},),
-            ("FileSize", {
-                "title": _("Filesize")},),
+#            ("FileSize", {
+#                "title": _("Filesize")},),
             ("Date", {
                 "title": _("Published Date")},),
             ("PublishedBy", {
@@ -222,7 +226,11 @@ class ReportsListingView(ListingView):
             item["replace"]["Batch"] = get_link(
                 batch.absolute_url(), value=batch.Title()
             )
-
+        # Include Patient Full Name
+        patient_full_name = obj.getPatientFullName()  # This is a placeholder, replace with actual method to get patient full name
+        item["PatientFullName"] = patient_full_name
+        item["TestNames"] = "<br>".join([analysis.Title for analysis in ar.getAnalyses()])
+        
         pdf = self.get_pdf(obj)
         filesize = self.get_filesize(pdf)
         if filesize > 0:

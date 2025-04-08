@@ -1,0 +1,58 @@
+/*
+Sticker Dimensions: 48mm x 18mm
+Sticker margins: 8mm, 1mm
+*/
+.sticker {
+    margin: 0 auto;
+    padding: 1mm;
+    width: 38mm;    /* Total width  = 1 + 1 + 46 = 48mm */
+    height: 20mm;   /* Total height = 1 + 1 + 14 = 18mm */
+    font-family: Helvetica, Arial;
+    font-size: 7pt;
+    text-align: center;
+    overflow: hidden;
+}
+
+.sticker .error {
+    color: red;
+    font-size: 7pt;
+    z-index: 1000;
+}
+
+.sticker .barcode {
+    margin: 0 auto;
+    padding: 1mm 0 !important;
+    text-align: center;
+}
+
+.sample-info table {
+    width: 100%;
+}
+.sample-info {
+    max-width: 40mm;
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.truncate {
+    max-width: 36mm;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sample-info table td {
+    padding: 0 1em;
+}
+
+@media print {
+    @page {
+        size:  38mm 20mm !important;
+        margin: 0mm !important;
+    }
+    html, body {
+        width: 38mm !important;
+        height: 20mm !important;
+        margin: 0mm !important;
+    }
+}

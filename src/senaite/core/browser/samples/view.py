@@ -85,7 +85,7 @@ class SamplesView(ListingView):
         self.contentFilter = {
             "sort_on": "created",
             "sort_order": "descending",
-            "isRootAncestor": False,  # only root ancestors
+            "isRootAncestor": True, # only root ancestors
         }
 
         self.title = self.context.translate(_("Samples"))
@@ -509,8 +509,8 @@ class SamplesView(ListingView):
         priority_div = """<div class="priority-ico priority-%s">
                           <span class="notext">%s</span><div>
                        """
-        item["replace"]["Priority"] = priority_div % (priority, priority_text)
-        item["replace"]["getProfilesTitle"] = obj.getProfilesTitleStr
+        item["TestNames"] = "<br>".join([analysis.Title for analysis in ar.getAnalyses()])
+        item["replace"]["getProfilesTitle"] = "<br>".join(obj.getProfilesTitleStr)
 
         # returns a list of
         # [verified, total, not_submitted, to_be_verified]

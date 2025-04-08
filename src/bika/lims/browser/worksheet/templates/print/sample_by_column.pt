@@ -33,7 +33,7 @@
       <a tal:attributes="href laboratory/url">
         <img class="logo"
              height="25"
-             tal:attributes="src string:++plone++senaite.core.static/images/senaite.svg"/>
+             tal:attributes="src string:++plone++senaite.core.static/images/ecegen-logo.svg"/>
       </a>
     </div>
     <h1>

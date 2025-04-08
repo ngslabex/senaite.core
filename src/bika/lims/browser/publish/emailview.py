@@ -751,7 +751,22 @@ class EmailView(BrowserView):
         """Generate the filename for the sample PDF
         """
         sample = report.getAnalysisRequest()
-        return "{}.pdf".format(api.get_id(sample))
+    # Fetch the patient full name
+        patient_full_name = sample.getPatientFullName()  # Ensure this method is correct
+    # Replace spaces or problematic characters in the patient name
+        safe_patient_name = patient_full_name.replace(" ", "_").replace("/", "_")
+    # Fetch all analyses and their ShortTitle values
+        analyses = sample.getAnalyses(full_objects=True)
+    #    short_titles = sample.getShortTitle(full_objects=True)
+        short_titles = [
+            analysis.getService().getShortTitle() or "TEST"
+            for analysis in analyses
+        ]
+    # Concatenate ShortTitles with a separator (e.g., underscore)
+        short_titles_str = "_".join(short_titles)
+
+    # Combine sample ID and patient name
+        return "{}-{}-{}.pdf".format(api.get_id(sample), safe_patient_name, short_titles_str)
 
     def get_pdf(self, obj):
         """Get the report PDF

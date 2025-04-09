@@ -511,7 +511,7 @@ class SamplesView(ListingView):
                           <span class="notext">%s</span><div>
                        """
         item["TestNames"] = "<br>".join([analysis.Title for analysis in obj.getAnalyses()])
-        item["replace"]["getProfilesTitle"] = "<br>".join(obj.getProfilesTitleStr)
+        item["replace"]["getProfilesTitle"] = "<br>".join(obj.getProfilesTitleStr())
 
         # returns a list of
         # [verified, total, not_submitted, to_be_verified]

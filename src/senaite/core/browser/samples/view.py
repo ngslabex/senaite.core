@@ -494,7 +494,7 @@ class SamplesView(ListingView):
         # Call the folderitem method from the base class
         item = super(SamplesView, self).folderitem(obj, item, index)
         obj = api.get_object(obj)
-        ar = obj.getAnalysisRequest()
+        ar = obj  # çünkü zaten AnalysisRequest 
         if not item:
             return None
 

@@ -494,7 +494,6 @@ class SamplesView(ListingView):
         # Call the folderitem method from the base class
         item = super(SamplesView, self).folderitem(obj, item, index)
         obj = api.get_object(obj)
-        ar = obj  # çünkü zaten AnalysisRequest 
         if not item:
             return None
 
@@ -511,7 +510,7 @@ class SamplesView(ListingView):
         priority_div = """<div class="priority-ico priority-%s">
                           <span class="notext">%s</span><div>
                        """
-        item["TestNames"] = "<br>".join([analysis.Title for analysis in ar.getAnalyses()])
+        item["TestNames"] = "<br>".join([analysis.Title for analysis in obj.getAnalyses()])
         item["replace"]["getProfilesTitle"] = "<br>".join(obj.getProfilesTitleStr)
 
         # returns a list of

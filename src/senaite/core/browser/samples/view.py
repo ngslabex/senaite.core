@@ -500,7 +500,7 @@ class SamplesView(ListingView):
         item["Creator"] = self.user_fullname(obj.Creator)
         # If we redirect from the folderitems view we should check if the
         # user has permissions to medify the element or not.
-        priority_sort_key = obj.getPrioritySortkey
+        priority_sort_key = obj.getPrioritySortkey()
         if not priority_sort_key:
             # Default priority is Medium = 3.
             # The format of PrioritySortKey is <priority>.<created>

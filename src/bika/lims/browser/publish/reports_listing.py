@@ -32,7 +32,6 @@ from senaite.core.catalog import REPORT_CATALOG
 from senaite.core.permissions.sample import can_publish
 from ZODB.POSException import POSKeyError
 
-
 class ReportsListingView(ListingView):
     """Listing view of all generated reports
     """

@@ -32,20 +32,35 @@ class DownloadView(BrowserView):
     def __call__(self):
         filename = self.get_report_filename(self.context)
         pdf = self.context.getPdf()
-        self.download(pdf.data, filename)
+        return self.download(pdf.data, filename)
 
     def get_report_filename(self, report):
         """Generate the filename for the sample PDF
         """
         sample = report.getAnalysisRequest()
-        return "{}.pdf".format(api.get_id(sample))
+         # Fetch the patient full name
+        patient_full_name = sample.getPatientFullName()  # Ensure this method is correct
+        # Replace spaces or problematic characters in the patient name
+        safe_patient_name = patient_full_name.replace(" ", "_").replace("/", "_")
+        # Fetch all analyses and their ShortTitle values
+        analyses = sample.getAnalyses(full_objects=True)
+         #    short_titles = sample.getShortTitle(full_objects=True)
+        short_titles = [
+            analysis.getService().getShortTitle() or "TEST"
+            for analysis in analyses
+        ]
+        # Concatenate ShortTitles with a separator (e.g., underscore)
+        short_titles_str = "_".join(short_titles)
+
+        # Combine sample ID and patient name
+        return "{}-{}-{}.pdf".format(api.get_id(sample), safe_patient_name, short_titles_str)
 
     def download(self, data, filename, content_type="application/pdf"):
         """Download the PDF
         """
         self.request.response.setHeader(
-            "Content-Disposition", "inline; filename=%s" % filename)
-        self.request.response.setHeader("Content-Type", content_type)
+            "Content-Disposition", 'inline; filename="{}"'.format(filename))
+        self.request.response.setHeader("Content-Type", content_type, "application/pdf")
         self.request.response.setHeader("Content-Length", len(data))
         self.request.response.setHeader("Cache-Control", "no-store")
         self.request.response.setHeader("Pragma", "no-cache")

@@ -15,7 +15,7 @@
 # this program; if not, write to the Free Software Foundation, Inc., 51
 # Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
-# Copyright 2018-2025 by it's authors.
+# Copyright 2018-2024 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
 import functools
@@ -262,8 +262,9 @@ class EmailView(BrowserView):
     def email_sender_address(self):
         """Sender email is either the lab email or portal email "from" address
         """
-        setup = api.get_senaite_setup()
-        return setup.getEmailFromSamplePublication()
+        lab_email = self.laboratory.getEmailAddress()
+        portal_email = api.get_registry_record("plone.email_from_address")
+        return lab_email or portal_email or ""
 
     @property
     def email_sender_name(self):
@@ -511,14 +512,14 @@ class EmailView(BrowserView):
         """
 
         # allow to add translation for initial template
-        template = self.context.translate(_(safe_unicode(template)))
+        template = self.context.translate(_(template))
         recipients = self.email_recipients_and_responsibles
         if template_context is None:
             template_context = {
-                "recipients": u"<br/>".join(map(safe_unicode, recipients)),
+                "recipients": "<br/>".join(recipients),
             }
 
-        email_template = Template(template).safe_substitute(
+        email_template = Template(safe_unicode(template)).safe_substitute(
             **template_context)
 
         return email_template
@@ -750,11 +751,13 @@ class EmailView(BrowserView):
     def get_report_filename(self, report):
         """Generate the filename for the sample PDF
         """
+        # sample = report.getAnalysisRequest()
+        # return "{}.pdf".format(api.get_id(sample))
         sample = report.getAnalysisRequest()
     # Fetch the patient full name
         patient_full_name = sample.getPatientFullName()  # Ensure this method is correct
     # Replace spaces or problematic characters in the patient name
-        safe_patient_name = patient_full_name.replace(" ", "_").replace("/", "_")
+        safe_patient_name = patient_full_name.replace(" ", " ").replace("/", "_")
     # Fetch all analyses and their ShortTitle values
         analyses = sample.getAnalyses(full_objects=True)
     #    short_titles = sample.getShortTitle(full_objects=True)
@@ -766,7 +769,9 @@ class EmailView(BrowserView):
         short_titles_str = "_".join(short_titles)
 
     # Combine sample ID and patient name
-        return "{}-{}-{}.pdf".format(api.get_id(sample), safe_patient_name, short_titles_str)
+#        return "{}-{}-{}.pdf".format(api.get_id(sample), safe_patient_name, short_titles_str)
+        return "{}-{}.pdf".format(api.get_id(sample), safe_patient_name)
+
 
     def get_pdf(self, obj):
         """Get the report PDF

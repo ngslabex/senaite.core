@@ -50,9 +50,17 @@ class WorkflowActionDownloadReportsAdapter(RequestContextAware):
             if pdf is None:
                 self.add_status_message(
                     _("Could not load PDF for sample {}"
-                      .format(sample_id)), "warning")
+                    .format(sample_id)), "warning")
                 continue
-            pdf.filename = "{}.pdf".format(sample_id)
+
+            # Dosya adını hasta adı ve test adıyla zenginleştir
+            patient_full_name = sample.getPatientFullName()
+            safe_patient_name = patient_full_name.replace(" ", "_").replace("/", "_") if patient_full_name else "HASTA"
+            analyses = sample.getAnalyses(full_objects=True)
+            short_titles = [analysis.getService().getShortTitle() or "TEST" for analysis in analyses]
+            short_titles_str = "_".join(short_titles)
+            pdf.filename = "{}-{}-{}.pdf".format(sample_id, safe_patient_name, short_titles_str)
+
             pdfs.append(pdf)
 
         if len(pdfs) == 1:

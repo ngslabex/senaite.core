@@ -4,6 +4,12 @@ Changelog
 2.7.0 (unreleased)
 ------------------
 
+- #2716 Fix submit form on confirmation dialog "Yes" button click
+- #2718 Fix AttributeError in Worksheet Print View
+- #2717 Allow the edition of QC results from inside Reference Sample
+- #2715 Allow the edition of QC results from inside Instrument
+- #2712 Fix non-consecutive same-day data points in Levey-Jennings chart
+- #2708 Fix QR code has no embedded ID
 - #2705 Fix instruments not filtered by method in WS template edit view
 - #2707 Fix analyst permission for auto results import
 

@@ -33,26 +33,22 @@ def sample_uid(instance):
 @indexer(IARReport)
 def arreport_searchable_text(instance):
     sample = instance.getAnalysisRequest()
-    metadata = instance.getMetadata() or {}
 
     tokens = [
         sample.getId(),
-        sample.getBatchID(),
-        metadata.get("paperformat", ""),
-        metadata.get("orientation", ""),
-        metadata.get("template", ""),
     ]
 
-    # Extend IDs of contained Samples
-    contained_samples = instance.getContainedAnalysisRequests()
-    tokens.extend(map(api.get_id, contained_samples))
+    # Hasta adı
+    patient_name = sample.getPatientFullName()
+    if patient_name:
+        tokens.append(unicode(patient_name, "utf-8") if isinstance(patient_name, str) else patient_name)
 
-    # Extend email recipients
-    recipients = []
-    for log in instance.getSendLog():
-        for recipient in log.get("email_recipients", []):
-            recipients.append(recipient)
-
-    tokens.extend(recipients)
+    # Test adları
+    for analysis in sample.getAnalyses():
+        try:
+            title = analysis.Title() if callable(analysis.Title) else analysis.Title
+            tokens.append(unicode(title, "utf-8") if isinstance(title, str) else title)
+        except Exception:
+            continue
 
     return u" ".join(list(set(tokens)))

@@ -42,14 +42,7 @@ def arreport_searchable_text(instance):
         metadata.get("orientation", ""),
         metadata.get("template", ""),
     ]
-    # Hasta adı
-    patient_name = sample.getPatientFullName()
-    if patient_name:
-        tokens.append(patient_name)
 
-    # Test adları
-    test_titles = [a.Title for a in sample.getAnalyses()]
-    tokens.extend(test_titles)
     # Extend IDs of contained Samples
     contained_samples = instance.getContainedAnalysisRequests()
     tokens.extend(map(api.get_id, contained_samples))
@@ -62,5 +55,4 @@ def arreport_searchable_text(instance):
 
     tokens.extend(recipients)
 
-    return u" ".join([api.to_unicode(t or "") for t in set(tokens)])
-
+    return u" ".join(list(set(tokens)))

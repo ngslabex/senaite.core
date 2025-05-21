@@ -1,6 +1,6 @@
 {
   "name": "senaite.core",
-  "version": "2.2.0",
+  "version": "2.7.0",
   "main": "app/senaite.core.js",
   "scripts": {
     "build": "mode=production webpack",
@@ -20,7 +20,7 @@
   "license": "GPL-2.0-only",
   "dependencies": {
     "@babel/runtime": "^7.27.1",
-    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "bootstrap": "^4.6.0",
     "bootstrap-confirmation2": "^4.2.1",
     "bootstrap-select": "^1.13.18",
@@ -30,9 +30,9 @@
     "jquery-form": "^4.3.0",
     "jquery-ui": "^1.14.1",
     "popper.js": "^1.16.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tinymce": "^5.9.1"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tinymce": "^7.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.27.1",

@@ -55,6 +55,7 @@ from plone.memoize.volatile import DontCache
 from Products.Archetypes.atapi import DisplayList
 from Products.Archetypes.BaseObject import BaseObject
 from Products.Archetypes.event import ObjectInitializedEvent
+from Products.Archetypes.public import StringField
 from Products.Archetypes.utils import mapply
 from Products.CMFCore.interfaces import IFolderish
 from Products.CMFCore.interfaces import ISiteRoot
@@ -77,10 +78,10 @@ from zope.component import queryMultiAdapter
 from zope.container.contained import notifyContainerModified
 from zope.event import notify
 from zope.i18n import translate
+from zope.interface import Invalid
 from zope.interface import alsoProvides
 from zope.interface import directlyProvides
 from zope.interface import noLongerProvides
-from zope.interface import Invalid
 from zope.lifecycleevent import ObjectMovedEvent
 from zope.publisher.browser import TestRequest
 from zope.schema import getFieldsInOrder
@@ -118,6 +119,20 @@ UID_RX = re.compile("[a-z0-9]{32}$")
 UID_CATALOG = "uid_catalog"
 PORTAL_CATALOG = "portal_catalog"
 
+# fields that are not validated by the API
+SKIP_VALIDATION_FIELDS = [
+    "allow_discussion",
+    "contributors",
+    "creators",
+    "effective",
+    "exclude_from_nav",
+    "expires",
+    "language",
+    "nextPreviousEnabled",
+    "relatedItems",
+    "rights",
+    "subjects",
+]
 
 class APIError(Exception):
     """Base exception class for bika.lims errors."""
@@ -2078,19 +2093,40 @@ def validate(obj, invariants=True):
     if not is_dexterity_content(obj):
         raise TypeError("%r is not supported" % type(obj))
 
+    def is_string_field(field):
+        """Check if the field is a string field
+        """
+        return isinstance(field, (StringField)) or \
+            getattr(field, "_type", None) in [str]
+
     errors = {}
 
     # iterate through object fields and validate each
     fields = get_fields(obj)
+
     for field_name, field in fields.items():
+        if field_name in SKIP_VALIDATION_FIELDS:
+            continue
+
         value = getattr(obj, field_name, None)
-        value = safe_unicode(value)
+
+        if callable(value):
+            # Handle callable values, e.g. effective, expired etc.
+            value = value()
+        if isinstance(value, six.string_types):
+            value = safe_unicode(value)
+        if is_string_field(field):
+            # provide UTF8 encoded strings for stringfields, e.g. the ID field.
+            value = to_utf8(value)
+
         try:
             field.validate(value)
         except RequiredMissing:
             errors[field_name] = "required field"
         except WrongType:
-            errors[field_name] = "wrong type"
+            # ignore wrong type errors if the field is not required and unset
+            if value is not None:
+                errors[field_name] = "wrong type"
         except Invalid as ex:
             errors[field_name] = translate(ex.message)
 
@@ -2110,3 +2146,58 @@ def validate(obj, invariants=True):
             errors[behavior_id] = translate(ex.message)
 
     return errors
+
+
+def get_portal_types():
+    """Returns a list with the registered portal types
+
+    :returns: List of portal type names
+    :rtype: list
+    """
+    types_tool = get_tool("portal_types")
+    return types_tool.listContentTypes()
+
+
+def is_valid_id(thing, container=None):
+    """Checks if is a valid ID candidate based on the following conditions:
+
+      - Contains only letters, numbers, hyphens ('-'), or underscores ('_').
+      - Starts with a letter or a number.
+      - Ends with a letter or a number.
+      - Has a minimum length of 3 characters.
+      - Does not match reserved words (e.g., 'REQUEST') or portal type names.
+
+    If a container is provided, it also verifies the container does not have
+    any attribute or function with same id.
+
+    :param id: the id to validate
+    :type id: str
+    :returns: True if the id meets all the conditions, False otherwise.
+    """
+    id_rx = re.compile(r"^[a-z0-9][a-z0-9_\-]+[a-z0-9]$")
+    illegal = re.compile(r"^(aq_|manage|request).*")
+
+    if not is_string(thing):
+        return False
+
+    # convert to lower to simplify regex
+    lower = thing.lower()
+
+    # check length and characters
+    if not id_rx.match(lower):
+        return False
+
+    # check for reserved/illegal word
+    if illegal.match(lower):
+        return False
+
+    # check for portal type names
+    portal_types = get_portal_types()
+    if thing in portal_types:
+        return False
+
+    # check for container attributes and functions
+    if container and hasattr(container, thing):
+        return False
+
+    return True

@@ -769,8 +769,8 @@ class EmailView(BrowserView):
         short_titles_str = "_".join(short_titles)
 
     # Combine sample ID and patient name
-#        return "{}-{}-{}.pdf".format(api.get_id(sample), safe_patient_name, short_titles_str)
-        return "{}-{}.pdf".format(api.get_id(sample), safe_patient_name)
+        return "{}-{}.pdf".format(safe_patient_name, short_titles_str)
+#        return "{}-{}.pdf".format(api.get_id(sample), safe_patient_name)
 
 
     def get_pdf(self, obj):

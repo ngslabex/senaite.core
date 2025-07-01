@@ -4,6 +4,17 @@ Changelog
 2.7.0 (unreleased)
 ------------------
 
+- #2760 Fix UnicodeDecodeError in instrument importer when processing field values
+- #2759 Fix UnicodeDecodeError on Specification Validation
+- #2758 Fix global auditlog error for objects without snapshots
+- #2757 Fix return base URL for AJAX requests in the AR add form
+- #2752 Add modified index to catalog
+- #2756 Fix reindex behavior in setup_core_catalogs
+- #2755 Remove dependency handling from sample add form
+- #2754 Fix template service partition selector update
+- #2753 Enable full view reload for specific item transitions in listings
+- #2751 Apply worksheet template only to analyses of selected samples
+- #2748 Add extra check to make sure a result is a true string before cgi.replace call
 - #2745 Fix wrong labels for attachment "Render in Report" checkboxes
 - #2743 Added client_sampleid to worksheet printview
 - #2729 Fix rejected analyses reassigned from profile

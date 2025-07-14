@@ -4,6 +4,11 @@ Changelog
 2.7.0 (unreleased)
 ------------------
 
+- #2766 Allow negative numbers in numeric fields
+- #2765 DX address widget improvements and fixtures
+- #2763 Updated intl-tel-input 17.0.19 -> 25.3.1
+- #2764 Fix receive guard on sample creation is skipped if auto-receive enabled
+- #2761 Fix AT decimal widget allows commas
 - #2760 Fix UnicodeDecodeError in instrument importer when processing field values
 - #2759 Fix UnicodeDecodeError on Specification Validation
 - #2758 Fix global auditlog error for objects without snapshots

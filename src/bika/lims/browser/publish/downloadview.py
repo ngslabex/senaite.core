@@ -35,25 +35,28 @@ class DownloadView(BrowserView):
         return self.download(pdf.data, filename)
 
     def get_report_filename(self, report):
-        """Generate the filename for the sample PDF
-        """
+        """Generate the filename for the sample PDF"""
         sample = report.getAnalysisRequest()
-         # Fetch the patient full name
-        patient_full_name = sample.getPatientFullName()  # Ensure this method is correct
-        # Replace spaces or problematic characters in the patient name
-        safe_patient_name = patient_full_name.replace(" ", "_").replace("/", "_")
-        # Fetch all analyses and their ShortTitle values
+
+        # 1. Hasta adı soyadı (boşluk ve özel karakterleri temizle)
+        patient_full_name = sample.getPatientFullName() or "HASTA"
+        patient_full_name_ascii = unicodedata.normalize('NFKD', patient_full_name).encode('ascii', 'ignore').decode('ascii')
+        safe_patient_name = re.sub(r'[^\w\-_.]', '_', patient_full_name_ascii)
+
+        # 2. Analiz başlıkları (ShortTitle)
         analyses = sample.getAnalyses(full_objects=True)
-         #    short_titles = sample.getShortTitle(full_objects=True)
         short_titles = [
-            analysis.getService().getShortTitle() or "TEST"
+            (analysis.getService().getShortTitle() or "TEST")
             for analysis in analyses
         ]
-        # Concatenate ShortTitles with a separator (e.g., underscore)
         short_titles_str = "_".join(short_titles)
+        short_titles_ascii = unicodedata.normalize('NFKD', short_titles_str).encode('ascii', 'ignore').decode('ascii')
+        safe_titles = re.sub(r'[^\w\-_.]', '_', short_titles_ascii)
 
-        # Combine sample ID and patient name
-        return "{}-{}-{}.pdf".format(api.get_id(sample), safe_patient_name, short_titles_str)
+        # 3. Dosya adı: Örn: D-2102-251700027_Mehmet_Kaya_MLPA_Metilasyon.pdf
+        sample_id = api.get_id(sample)
+
+        return "{}-{}-{}.pdf".format(sample_id, safe_patient_name, safe_titles)
 
     def download(self, data, filename, content_type="application/pdf"):
         """Download the PDF

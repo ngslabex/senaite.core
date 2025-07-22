@@ -42,6 +42,8 @@ class DownloadView(BrowserView):
 
         # 1. Hasta adı soyadı (boşluk ve özel karakterleri temizle)
         patient_full_name = sample.getPatientFullName() or "HASTA"
+        if isinstance(patient_full_name, str):
+            patient_full_name = unicode(patient_full_name, 'utf-8')
         patient_full_name_ascii = unicodedata.normalize('NFKD', patient_full_name).encode('ascii', 'ignore').decode('ascii')
         safe_patient_name = re.sub(r'[^\w\-_.]', '_', patient_full_name_ascii)
 
@@ -52,6 +54,8 @@ class DownloadView(BrowserView):
             for analysis in analyses
         ]
         short_titles_str = "_".join(short_titles)
+        if isinstance(short_titles_str, str):
+            short_titles_str = unicode(short_titles_str, 'utf-8')
         short_titles_ascii = unicodedata.normalize('NFKD', short_titles_str).encode('ascii', 'ignore').decode('ascii')
         safe_titles = re.sub(r'[^\w\-_.]', '_', short_titles_ascii)
 

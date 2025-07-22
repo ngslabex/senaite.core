@@ -755,25 +755,23 @@ class EmailView(BrowserView):
 
         sample = report.getAnalysisRequest()
 
-        # 1. Hasta adı – Türkçe karakterleri ASCII'ye dönüştür, özel karakterleri temizle
+        # 1. Hasta adı – unicode'a çevir, Türkçe karakterleri ASCII'ye dönüştür
         patient_full_name = sample.getPatientFullName() or "HASTA"
+        if isinstance(patient_full_name, str):  # Python 2.7 için gerekli
+            patient_full_name = unicode(patient_full_name, 'utf-8')
         patient_ascii = unicodedata.normalize('NFKD', patient_full_name).encode('ascii', 'ignore').decode('ascii')
         safe_patient_name = re.sub(r'[^\w\-_.]', '_', patient_ascii)
 
         # 2. Analiz başlıkları – ShortTitle alınır ve güvenli hale getirilir
         analyses = sample.getAnalyses(full_objects=True)
-        short_titles = [
-            analysis.getService().getShortTitle() or "TEST"
-            for analysis in analyses
-        ]
+        short_titles = [analysis.getService().getShortTitle() or "TEST" for analysis in analyses]
         titles_str = "_".join(short_titles)
+        if isinstance(titles_str, str):
+            titles_str = unicode(titles_str, 'utf-8')
         titles_ascii = unicodedata.normalize('NFKD', titles_str).encode('ascii', 'ignore').decode('ascii')
         safe_titles = re.sub(r'[^\w\-_.]', '_', titles_ascii)
 
-        # 3. ID alınabilir, fakat şu anda alınmıyor
-        # sample_id = api.get_id(sample)
-
-        # 4. Final dosya adı
+        # 3. Final dosya adı
         return "{}-{}.pdf".format(safe_patient_name, safe_titles)
 
 

@@ -20,6 +20,8 @@
 
 from bika.lims import api
 from Products.Five.browser import BrowserView
+import unicodedata
+import re
 
 
 class DownloadView(BrowserView):

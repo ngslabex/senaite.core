@@ -46,6 +46,8 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from ZODB.POSException import POSKeyError
 from zope.interface import implements
 from zope.publisher.interfaces import IPublishTraverse
+import unicodedata
+import re
 
 DEFAULT_MAX_EMAIL_SIZE = 15
 
@@ -749,28 +751,30 @@ class EmailView(BrowserView):
             return 0.0
 
     def get_report_filename(self, report):
-        """Generate the filename for the sample PDF
-        """
-        # sample = report.getAnalysisRequest()
-        # return "{}.pdf".format(api.get_id(sample))
+        """Generate a safe filename for the sample PDF"""
+
         sample = report.getAnalysisRequest()
-    # Fetch the patient full name
-        patient_full_name = sample.getPatientFullName()  # Ensure this method is correct
-    # Replace spaces or problematic characters in the patient name
-        safe_patient_name = patient_full_name.replace(" ", " ").replace("/", "_")
-    # Fetch all analyses and their ShortTitle values
+
+        # 1. Hasta adı – Türkçe karakterleri ASCII'ye dönüştür, özel karakterleri temizle
+        patient_full_name = sample.getPatientFullName() or "HASTA"
+        patient_ascii = unicodedata.normalize('NFKD', patient_full_name).encode('ascii', 'ignore').decode('ascii')
+        safe_patient_name = re.sub(r'[^\w\-_.]', '_', patient_ascii)
+
+        # 2. Analiz başlıkları – ShortTitle alınır ve güvenli hale getirilir
         analyses = sample.getAnalyses(full_objects=True)
-    #    short_titles = sample.getShortTitle(full_objects=True)
         short_titles = [
             analysis.getService().getShortTitle() or "TEST"
             for analysis in analyses
         ]
-    # Concatenate ShortTitles with a separator (e.g., underscore)
-        short_titles_str = "_".join(short_titles)
+        titles_str = "_".join(short_titles)
+        titles_ascii = unicodedata.normalize('NFKD', titles_str).encode('ascii', 'ignore').decode('ascii')
+        safe_titles = re.sub(r'[^\w\-_.]', '_', titles_ascii)
 
-    # Combine sample ID and patient name
-        return "{}-{}.pdf".format(safe_patient_name, short_titles_str)
-#        return "{}-{}.pdf".format(api.get_id(sample), safe_patient_name)
+        # 3. ID alınabilir, fakat şu anda alınmıyor
+        # sample_id = api.get_id(sample)
+
+        # 4. Final dosya adı
+        return "{}-{}.pdf".format(safe_patient_name, safe_titles)
 
 
     def get_pdf(self, obj):

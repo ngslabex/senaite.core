@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-12-21 09:58+0000\n"
-"PO-Revision-Date: 2024-12-30 23:34+0300\n"
+"PO-Revision-Date: 2025-07-23 08:12+0300\n"
 "Last-Translator: Jordi Puiggené <jpuiggene@naralabs.com>, 2022\n"
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/senaite/teams/87045/tr_TR/)\n"
 "Language: tr_TR\n"
@@ -4614,7 +4614,7 @@ msgstr ""
 
 #: senaite/core/profiles/default/workflows/senaite_sample_workflow/definition.xml
 msgid "Sample due"
-msgstr ""
+msgstr "Kargoda"
 
 #: senaite/core/browser/dashboard/dashboard.py:630
 msgid "Sample received"

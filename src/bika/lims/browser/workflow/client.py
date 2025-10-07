@@ -21,6 +21,8 @@
 import itertools
 import tempfile
 import zipfile
+import unicodedata
+import re
 
 from bika.lims import _
 from bika.lims import api
@@ -31,6 +33,26 @@ from DateTime import DateTime
 from ZODB.POSException import POSKeyError
 from zope.interface import implements
 
+try:
+    from urllib import quote  # Py2
+except ImportError:
+    from urllib.parse import quote  # Py3 (ileride uyum için)
+
+def _sanitize_ascii(value):
+    """Unicode girdiyi güvenli ASCII dosya adına çevirir."""
+    if value is None:
+        return u""
+    # Py2: 'str' ise UTF-8 varsayalım -> unicode'a çevir
+    if isinstance(value, str):
+        try:
+            value = value.decode('utf-8')
+        except Exception:
+            value = unicode(value)  # son çare
+    # NFKD -> ASCII
+    ascii_val = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    ascii_val = ascii_val.decode('ascii')
+    # Dosya adı için güvenli karakter seti
+    return re.sub(r'[^\w\-_.]', '_', ascii_val)
 
 class WorkflowActionDownloadReportsAdapter(RequestContextAware):
     """Adapter in charge of the client 'publish_samples' action
@@ -46,27 +68,31 @@ class WorkflowActionDownloadReportsAdapter(RequestContextAware):
         for report in reports:
             sample = report.getAnalysisRequest()
             sample_id = api.get_id(sample)
+
             pdf = self.get_pdf(report)
             if pdf is None:
                 self.add_status_message(
                     _("Could not load PDF for sample {}"
-                    .format(sample_id)), "warning")
+                      .format(sample_id)), "warning")
                 continue
 
-            # Dosya adını hasta adı ve test adıyla zenginleştir
-            patient_full_name = sample.getPatientFullName()
-            safe_patient_name = patient_full_name.replace(" ", "_").replace("/", "_") if patient_full_name else "HASTA"
+            # Hasta + test adlarını güvenli hale getir
+            patient_full_name = sample.getPatientFullName() or u"HASTA"
+            safe_patient = _sanitize_ascii(patient_full_name)
+
             analyses = sample.getAnalyses(full_objects=True)
-            short_titles = [analysis.getService().getShortTitle() or "TEST" for analysis in analyses]
-            short_titles_str = "_".join(short_titles)
-            pdf.filename = "{}-{}-{}.pdf".format(sample_id, safe_patient_name, short_titles_str)
+            short_titles = [(a.getService().getShortTitle() or "TEST") for a in analyses]
+            titles_str = u"_".join(short_titles)
+            safe_titles = _sanitize_ascii(titles_str)
+
+            # Tamamı ASCII olacak dosya adı
+            pdf.filename = u"{}-{}-{}.pdf".format(sample_id, safe_patient, safe_titles)
 
             pdfs.append(pdf)
 
         if len(pdfs) == 1:
             pdf = pdfs[0]
-            filename = pdf.filename
-            return self.download(pdf.data, filename, type="application/pdf")
+            return self.download(pdf.data, pdf.filename, type="application/pdf")
 
         with self.create_archive(pdfs) as archive:
             timestamp = DateTime().strftime("%Y%m%d_%H%M%S")
@@ -85,8 +111,17 @@ class WorkflowActionDownloadReportsAdapter(RequestContextAware):
 
     def download(self, data, filename, type="application/zip"):
         response = self.request.response
-        response.setHeader("Content-Disposition",
-                           "attachment; filename={}".format(filename))
+
+        # Fallback ASCII 'filename=' ve RFC 5987 uyumlu UTF-8 'filename*=' birlikte verilsin
+        # (filename ASCII olduğu için güvenli; yine de iki başlık sunmak iyi pratik)
+        ascii_name = filename if isinstance(filename, str) else filename.encode('ascii', 'ignore')
+        if not isinstance(ascii_name, str):
+            ascii_name = ascii_name.decode('ascii')
+
+        utf8_quoted = quote(filename.encode('utf-8') if not isinstance(filename, bytes) else filename)
+
+        cd_value = "attachment; filename=\"{}\"; filename*=UTF-8''{}".format(ascii_name, utf8_quoted)
+        response.setHeader("Content-Disposition", cd_value)
         response.setHeader("Content-Type", "{}; charset=utf-8".format(type))
         response.setHeader("Content-Length", len(data))
         response.setHeader("Cache-Control", "no-store")

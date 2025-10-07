@@ -225,45 +225,10 @@ class ReportsListingView(ListingView):
             item["replace"]["Batch"] = get_link(
                 batch.absolute_url(), value=batch.Title()
             )
-        
-        # Include Patient Full Name - CORRECTED: Use proper method to get patient info
-        patient_full_name = ""
-        try:
-            # Try different ways to get patient information
-            if hasattr(ar, 'getPatientFullName'):
-                patient_full_name = ar.getPatientFullName()
-            elif hasattr(ar, 'Schema') and ar.Schema().getField('Patient'):
-                patient = ar.Schema().getField('Patient').get(ar)
-                if patient and hasattr(patient, 'getFullName'):
-                    patient_full_name = patient.getFullName()
-            elif hasattr(ar, 'getPatient'):
-                patient = ar.getPatient()
-                if patient and hasattr(patient, 'getFullName'):
-                    patient_full_name = patient.getFullName()
-        except:
-            patient_full_name = ""
-        
-        # Handle Unicode for patient name
-        if patient_full_name and isinstance(patient_full_name, str):
-            try:
-                patient_full_name = patient_full_name.decode('utf-8')
-            except:
-                pass
-        item["PatientFullName"] = patient_full_name or _("No Patient")
-        
-        # Include Test Names - CORRECTED: Use Title property instead of method
-        analyses = ar.getAnalyses()
-        test_names = []
-        for analysis in analyses:
-            # Use Title property instead of Title() method
-            title = analysis.Title
-            if title and isinstance(title, str):
-                try:
-                    title = title.decode('utf-8')
-                except:
-                    pass
-            test_names.append(title)
-        item["TestNames"] = "<br>".join(test_names) if test_names else _("No Tests")
+        # Include Patient Full Name
+        patient_full_name = obj.getPatientFullName()  # This is a placeholder, replace with actual method to get patient full name
+        item["PatientFullName"] = patient_full_name
+        item["TestNames"] = "<br>".join([analysis.Title for analysis in ar.getAnalyses()])
         
         pdf = self.get_pdf(obj)
         filesize = self.get_filesize(pdf)
@@ -277,15 +242,7 @@ class ReportsListingView(ListingView):
         item["FileSize"] = "{:.2f} Kb".format(filesize)
         fmt_date = self.localize_date(obj.created())
         item["Date"] = fmt_date
-        
-        # Handle creator name Unicode
-        creator = obj.Creator()
-        if creator and isinstance(creator, str):
-            try:
-                creator = creator.decode('utf-8')
-            except:
-                pass
-        item["PublishedBy"] = self.user_fullname(creator)
+        item["PublishedBy"] = self.user_fullname(obj.Creator())
 
         if send_log:
             item["Sent"] = _("Yes")
@@ -325,22 +282,7 @@ class ReportsListingView(ListingView):
         for address, name in sent_to.items():
             if not name:
                 name = address
-            # Handle Unicode names properly
-            if isinstance(name, unicode):
-                name = name.encode('utf-8')
-            if isinstance(address, unicode):
-                address = address.encode('utf-8')
-            link = get_email_link(address, value=name)
+            # XXX: get_email_link can not handle unicodes!
+            link = get_email_link(to_utf8(address), value=to_utf8(name))
             out.append(link)
         return ", ".join(sorted(out))
-
-    def user_fullname(self, userid):
-        """Get user fullname with proper Unicode handling
-        """
-        user = api.get_user(userid)
-        if user:
-            fullname = user.getProperty('fullname', '')
-            if fullname and isinstance(fullname, unicode):
-                return fullname.encode('utf-8')
-            return fullname
-        return userid

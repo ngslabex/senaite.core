@@ -37,48 +37,39 @@ class DownloadView(BrowserView):
         return self.download(pdf.data, filename)
 
     def get_report_filename(self, report):
-        """Generate a safe filename for the sample PDF"""
+        """Generate the filename for the sample PDF"""
         sample = report.getAnalysisRequest()
-        
-        # Get patient name - use safe method
-        patient_full_name = ""
-        try:
-            if hasattr(sample, 'getPatientFullName'):
-                patient_full_name = sample.getPatientFullName() or "HASTA"
-            else:
-                patient_full_name = "HASTA"
-        except:
-            patient_full_name = "HASTA"
-        
-        # Convert to safe ASCII filename
-        safe_patient_name = patient_full_name.encode('ascii', 'ignore').decode('ascii')
-        safe_patient_name = re.sub(r'[^\w\-_.]', '_', safe_patient_name)
-        
-        # Get analysis titles
+
+        # 1. Hasta adı soyadı (boşluk ve özel karakterleri temizle)
+        patient_full_name = sample.getPatientFullName() or "HASTA"
+        if isinstance(patient_full_name, str):
+            patient_full_name = unicode(patient_full_name, 'utf-8')
+        patient_full_name_ascii = unicodedata.normalize('NFKD', patient_full_name).encode('ascii', 'ignore').decode('ascii')
+        safe_patient_name = re.sub(r'[^\w\-_.]', '_', patient_full_name_ascii)
+
+        # 2. Analiz başlıkları (ShortTitle)
         analyses = sample.getAnalyses(full_objects=True)
-        short_titles = []
-        for analysis in analyses:
-            service = analysis.getService()
-            if service:
-                short_title = service.getShortTitle() or "TEST"
-                short_titles.append(short_title)
-        
-        titles_str = "_".join(short_titles)
-        safe_titles = titles_str.encode('ascii', 'ignore').decode('ascii')
-        safe_titles = re.sub(r'[^\w\-_.]', '_', safe_titles)
-        
-        return "{}-{}.pdf".format(safe_patient_name, safe_titles)
+        short_titles = [
+            (analysis.getService().getShortTitle() or "TEST")
+            for analysis in analyses
+        ]
+        short_titles_str = "_".join(short_titles)
+        if isinstance(short_titles_str, str):
+            short_titles_str = unicode(short_titles_str, 'utf-8')
+        short_titles_ascii = unicodedata.normalize('NFKD', short_titles_str).encode('ascii', 'ignore').decode('ascii')
+        safe_titles = re.sub(r'[^\w\-_.]', '_', short_titles_ascii)
+
+        # 3. Dosya adı: Örn: D-2102-251700027_Mehmet_Kaya_MLPA_Metilasyon.pdf
+        sample_id = api.get_id(sample)
+
+        return "{}-{}-{}.pdf".format(sample_id, safe_patient_name, safe_titles)
 
     def download(self, data, filename, content_type="application/pdf"):
         """Download the PDF
         """
-        # Ensure filename is properly encoded for HTTP headers
-        if isinstance(filename, unicode):
-            filename = filename.encode('utf-8')
-        
         self.request.response.setHeader(
             "Content-Disposition", 'inline; filename="{}"'.format(filename))
-        self.request.response.setHeader("Content-Type", content_type)
+        self.request.response.setHeader("Content-Type", content_type, "application/pdf")
         self.request.response.setHeader("Content-Length", len(data))
         self.request.response.setHeader("Cache-Control", "no-store")
         self.request.response.setHeader("Pragma", "no-cache")

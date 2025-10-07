@@ -31,6 +31,19 @@ from senaite.app.listing import ListingView
 from senaite.core.catalog import REPORT_CATALOG
 from senaite.core.permissions.sample import can_publish
 from ZODB.POSException import POSKeyError
+# reports_listing.py (başlara yakın bir yere ekleyin)
+from Products.CMFCore.utils import getToolByName
+
+def _is_client_user(context):
+    """Geçerli kullanıcının bu context'te Client rolü olup olmadığını döndürür."""
+    try:
+        mtool = getToolByName(context, 'portal_membership')
+        member = mtool.getAuthenticatedMember()
+        roles = member.getRolesInContext(context)  # context'e göre etkili roller
+        # Kurumunuzda "Client" dışında "ClientAdmin" vb. varsa ekleyin:
+        return 'Client' in roles or 'ClientAdmin' in roles
+    except Exception:
+        return False
 
 class ReportsListingView(ListingView):
     """Listing view of all generated reports
@@ -201,6 +214,19 @@ class ReportsListingView(ListingView):
 
         obj = api.get_object(obj)
         ar = obj.getAnalysisRequest()
+        # ---- EKLENDİ: Client kullanıcıları için iptal olanları gizle ----
+        review_state = api.get_workflow_status_of(ar)
+        hide_for_clients = {"cancelled", "invalid", "retracted", "verified"}  # sadece 'cancelled' da olabilir
+
+        # >>> Burayı önceki denemedeki api.user.has_role yerine bu şekilde yazın
+        if _is_client_user(self.context) and review_state in hide_for_clients:
+            return None
+        # <<<
+
+        uid = api.get_uid(obj)
+        status_title = review_state.capitalize().replace("_", " ")
+        send_log = obj.getSendLog()
+        # ---- EK BİTİŞ ----
         uid = api.get_uid(obj)
         review_state = api.get_workflow_status_of(ar)
         status_title = review_state.capitalize().replace("_", " ")

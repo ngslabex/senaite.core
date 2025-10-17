@@ -377,6 +377,7 @@ class ISampleRegistry(ISenaiteRegistry):
         ),
         fields=[
             "sample_add_form_allow_multi_paste",
+            "trigger_events_on_sample_creation",
         ],
     )
 
@@ -396,6 +397,22 @@ class ISampleRegistry(ISenaiteRegistry):
         required=False,
     )
 
+    trigger_events_on_sample_creation = schema.Bool(
+        title=_(
+            u"label_registry_trigger_events_on_sample_creation",
+            default=u"Trigger events on sample creation"
+        ),
+        description=_(
+            u"description_registry_trigger_events_on_sample_creation",
+            default=u"When enabled, triggers “before” and “after” transition "
+                    u"events upon sample creation. This option is disabled by "
+                    u"default, but certain add-ons may depend on it to "
+                    u"operate correctly."
+        ),
+        default=False,
+        required=False,
+    )
+
 
 class IImportRegistry(ISenaiteRegistry):
     """Registry settings for instrument imports
@@ -409,6 +426,7 @@ class IImportRegistry(ISenaiteRegistry):
         ),
         fields=[
             "import_analysis_attach_importfile",
+            "import_analysis_submit",
         ],
     )
 
@@ -422,5 +440,18 @@ class IImportRegistry(ISenaiteRegistry):
             default=u"Attach import file to all Worksheet assigned analyses"
         ),
         default=False,
+        required=False,
+    )
+
+    import_analysis_submit = schema.Bool(
+        title=_(
+            u"label_registry_import_analysis_submit",
+            default=u"Submit Analyses upon import"
+        ),
+        description=_(
+            u"description_registry_import_analysis_submit",
+            default=u"Automatically submit analyses upon import"
+        ),
+        default=True,
         required=False,
     )

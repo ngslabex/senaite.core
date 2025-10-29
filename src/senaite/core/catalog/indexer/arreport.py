@@ -18,7 +18,6 @@
 # Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from bika.lims import api
 from bika.lims.interfaces import IARReport
 from plone.indexer import indexer
 

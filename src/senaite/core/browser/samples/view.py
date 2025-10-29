@@ -2,7 +2,7 @@
 #
 # This file is part of SENAITE.CORE.
 #
-# SENAITE.CORE is free software: you can redistribute it and/or modify it under
+# SENAITE.CORE is free software: you can redistribute and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
 # Foundation, version 2.
 #
@@ -45,28 +45,28 @@ from senaite.core.permissions.worksheet import can_add_worksheet
 from zope.interface import implementer
 
 ANALYSES_NUM_TPL = Template("$not_submitted/$to_be_verified/$verified/$total")
-ANALYSES_NUM_TPL_HTML = Template("""<div class="d-flex flex-row">
-  <span data-toggle="tooltip"
-        title="$not_submitted_title"
-        class="text-secondary cursor-pointer">
+ANALYSES_NUM_TPL_HTML = Template("""<div class=\"d-flex flex-row\">
+  <span data-toggle=\"tooltip\"
+        title=\"$not_submitted_title\"
+        class=\"text-secondary cursor-pointer\">
     $not_submitted
   </span>
-  <span class="separator">/</span>
-  <span data-toggle="tooltip"
-        title="$to_be_verified_title"
-        class="text-state-to_be_verified cursor-pointer">
+  <span class=\"separator\">/</span>
+  <span data-toggle=\"tooltip\"
+        title=\"$to_be_verified_title\"
+        class=\"text-state-to_be_verified cursor-pointer\">
     $to_be_verified
   </span>
-  <span class="separator">/</span>
-  <span data-toggle="tooltip"
-        title="$verified_title"
-        class="text-state-verified cursor-pointer">
+  <span class=\"separator\">/</span>
+  <span data-toggle=\"tooltip\"
+        title=\"$verified_title\"
+        class=\"text-state-verified cursor-pointer\">
     $verified
   </span>
-  <span class="separator">/</span>
-  <span data-toggle="tooltip"
-        title="$total_title"
-        class="text-black cursor-pointer">
+  <span class=\"separator\">/</span>
+  <span data-toggle=\"tooltip\"
+        title=\"$total_title\"
+        class=\"text-black cursor-pointer\">
     $total
   </span>
 </div>
@@ -506,8 +506,8 @@ class SamplesView(ListingView):
             priority_sort_key = "3.%s" % obj.created.ISO8601()
         priority = priority_sort_key.split(".")[0]
         priority_text = PRIORITIES.getValue(priority)
-        priority_div = """<div class="priority-ico priority-%s">
-                          <span class="notext">%s</span><div>
+        priority_div = """<div class=\"priority-ico priority-%s\">
+                          <span class=\"notext\">%s</span><div>
                        """
         item["replace"]["Priority"] = priority_div % (priority, priority_text)
         item["replace"]["getProfilesTitle"] = obj.getProfilesTitleStr
@@ -634,7 +634,8 @@ class SamplesView(ListingView):
                     samplers = getUsers(full_object, sampler_roles)
                     users = [({
                         "ResultValue": u,
-                        "ResultText": samplers.getValue(u)}) for u in samplers]
+                        "ResultText": samplers.getValue(u)})
+                        for u in samplers]
                     item["choices"] = {"getSampler": users}
                     # preselect the current user as sampler
                     if not sampler and "Sampler" in self.roles:

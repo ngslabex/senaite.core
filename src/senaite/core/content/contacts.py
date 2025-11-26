@@ -18,23 +18,21 @@
 # Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from senaite.core.browser.listing.actions import BaseActionView
+from bika.lims.interfaces import IDoNotSupportSnapshots
+from plone.supermodel import model
+from senaite.core.content.base import Container
+from senaite.core.interfaces import IContacts
+from senaite.core.interfaces import IHideActionsMenu
+from zope.interface import implementer
 
 
-class ActionView(BaseActionView):
-    """Action View for Analyses
+class IContactsSchema(model.Schema):
+    """Schema interface for Contacts container
     """
 
-    def recalculate(self):
-        """Recalculate the results
-        """
-        title = self.context.Title()
-        calc = self.context.getCalculation()
-        if not calc:
-            return self.message("No calculation found", False, title=title)
-        success = self.context.calculateResult(override=True)
-        if not success:
-            return self.message(
-                "Failed to recalculate result", False, title=title)
 
-        return self.message("Result recalculated", True, title=title)
+@implementer(IContacts, IContactsSchema,
+             IDoNotSupportSnapshots, IHideActionsMenu)
+class Contacts(Container):
+    """A container for global DX contacts in the setup folder
+    """

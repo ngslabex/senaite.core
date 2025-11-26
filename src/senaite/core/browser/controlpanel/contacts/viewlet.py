@@ -18,23 +18,14 @@
 # Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from senaite.core.browser.listing.actions import BaseActionView
+from plone.app.layout.viewlets import ViewletBase
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 
-class ActionView(BaseActionView):
-    """Action View for Analyses
-    """
+class ContactsFilterViewlet(ViewletBase):
+    """Viewlet to filter global vs all contacts"""
+    index = ViewPageTemplateFile("templates/contacts_filter.pt")
 
-    def recalculate(self):
-        """Recalculate the results
-        """
-        title = self.context.Title()
-        calc = self.context.getCalculation()
-        if not calc:
-            return self.message("No calculation found", False, title=title)
-        success = self.context.calculateResult(override=True)
-        if not success:
-            return self.message(
-                "Failed to recalculate result", False, title=title)
-
-        return self.message("Result recalculated", True, title=title)
+    def is_include_client_contacts(self):
+        """Check if client contacts should be included based on cookie"""
+        return self.request.cookies.get("include_client_contacts", "") == "1"

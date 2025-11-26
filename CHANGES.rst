@@ -4,6 +4,8 @@ Changelog
 2.7.0 (unreleased)
 ------------------
 
+- #2816 Fix custom actions and behaviors are missing
+- #2801 Global Contacts
 - #2795 Migrate Client Contacts to Dexterity
 - #2811 Fix typo in recalculation message ("Result recalucated" → "Result recalculated")
 - #2809 Prioritize after create sample susbcriber hooks

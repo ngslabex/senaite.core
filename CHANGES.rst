@@ -4,6 +4,9 @@ Changelog
 2.7.0 (unreleased)
 ------------------
 
+- #2818 Fix UnicodeDecodeError if analysis unit contains unicode characters
+- #2812 Migrate MultiFile to Dexterity
+- #2815 Remove dependency to plone.app.jquerytools
 - #2816 Fix custom actions and behaviors are missing
 - #2801 Global Contacts
 - #2795 Migrate Client Contacts to Dexterity

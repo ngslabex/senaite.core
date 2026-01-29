@@ -1907,6 +1907,15 @@ class ajaxAnalysisRequestAddView(AnalysisRequestAddView):
                     msg = _("Contact does not belong to the selected client")
                     fielderrors["Contact"] = msg
 
+            # Auto-add CCContact when hidden on Sample Add form
+            field = self.get_field("CCContact")
+            hidden_fields = self.get_fields_with_visibility(
+                    "hidden", mode="add")
+            if field in hidden_fields and contact_obj:
+                cc_contacts = contact_obj.getCCContact()
+                if cc_contacts:
+                    record["CCContact"] = [cc.UID() for cc in cc_contacts]
+
             # Check if the number of samples per record is permitted
             num_samples = self.get_num_samples(record)
             if num_samples > max_samples_record:
@@ -2036,7 +2045,6 @@ class ajaxAnalysisRequestAddView(AnalysisRequestAddView):
         """Creates samples for the given records
         """
         samples = []
-        request = self.request
         for record in records:
             client_uid = record.get("Client")
             client = self.get_object_by_uid(client_uid)
@@ -2057,24 +2065,50 @@ class ajaxAnalysisRequestAddView(AnalysisRequestAddView):
             # Create as many samples as required
             num_samples = self.get_num_samples(record)
             for idx in range(num_samples):
-                sample = crar(client, self.request, record)
-
-                # Create the attachments
-                for attachment_record in attachments:
-                    self.create_attachment(sample, attachment_record)
-
-                # Pass the new sample to all subscription hooks
-                hooks = subscribers((sample, request), IAfterCreateSampleHook)
-                # Lower sort keys are processed first
-                sorted_hooks = sorted(
-                    hooks, key=lambda x: api.to_float(getattr(x, "sort", 10)))
-                for hook in sorted_hooks:
-                    hook.update(sample, source=source)
-
-                transaction.savepoint(optimistic=True)
+                sample = self.create_sample(
+                    client, record, attachments=attachments, source=source)
                 samples.append(sample)
 
         return samples
+
+    def create_sample(self, client, record, attachments=None, source=None):
+        """Creates a single sample with proper transaction handling
+
+        :param client: The client container where the sample will be created
+        :param record: Dict with sample data (field names to values)
+        :param attachments: List of attachment records to add to the sample
+        :param source: Source object for sample hooks (e.g., for copy/partition)
+        :return: The created sample object
+        """
+        # Create a savepoint before sample creation to allow proper rollback
+        # if sample creation fails (e.g., ID generation error)
+        sp = transaction.savepoint()
+        try:
+            # Create the sample
+            sample = crar(client, self.request, record)
+
+            # Create the attachments
+            if attachments:
+                for attachment_record in attachments:
+                    self.create_attachment(sample, attachment_record)
+
+            # Pass the new sample to all subscription hooks
+            hooks = subscribers((sample, self.request), IAfterCreateSampleHook)
+            # Lower sort keys are processed first
+            sorted_hooks = sorted(
+                hooks, key=lambda x: api.to_float(getattr(x, "sort", 10)))
+            for hook in sorted_hooks:
+                hook.update(sample, source=source)
+
+            # Commit the sample creation
+            transaction.savepoint(optimistic=True)
+            return sample
+        except Exception:
+            # Roll back to the savepoint before this sample creation
+            # This properly reverts all changes including catalog entries,
+            # workflow history, annotations, etc.
+            sp.rollback()
+            raise
 
     def get_num_samples(self, record):
         """Return the number of samples to create for the given record

@@ -31,19 +31,7 @@ from senaite.app.listing import ListingView
 from senaite.core.catalog import REPORT_CATALOG
 from senaite.core.permissions.sample import can_publish
 from ZODB.POSException import POSKeyError
-# reports_listing.py (başlara yakın bir yere ekleyin)
-from Products.CMFCore.utils import getToolByName
 
-def _is_client_user(context):
-    """Geçerli kullanıcının bu context'te Client rolü olup olmadığını döndürür."""
-    try:
-        mtool = getToolByName(context, 'portal_membership')
-        member = mtool.getAuthenticatedMember()
-        roles = member.getRolesInContext(context)  # context'e göre etkili roller
-        # Kurumunuzda "Client" dışında "ClientAdmin" vb. varsa ekleyin:
-        return 'Client' in roles or 'ClientAdmin' in roles
-    except Exception:
-        return False
 
 class ReportsListingView(ListingView):
     """Listing view of all generated reports
@@ -54,7 +42,7 @@ class ReportsListingView(ListingView):
 
         self.catalog = REPORT_CATALOG
         self.contentFilter = {
-            "portal_type": "ARReport",
+            "portal_type": ["ResultsReport"],
             "path": {
                 "query": api.get_path(self.context),
                 "depth": 2,
@@ -84,18 +72,14 @@ class ReportsListingView(ListingView):
             ("AnalysisRequest", {
                 "title": _("Primary Sample"),
                 "index": "sortable_title"},),
-#            ("Batch", {
-#                "title": _("Batch")},),
-            ("PatientFullName", {
-                "title": _("Hasta Adi")},),  # New column added here
-            ("TestNames", {
-                "title": _("Profile")},),  # New column added here
+            ("Batch", {
+                "title": _("Batch")},),
             ("State", {
                 "title": _("Review State")},),
             ("PDF", {
                 "title": _("Download PDF")},),
-#            ("FileSize", {
-#                "title": _("Filesize")},),
+            ("FileSize", {
+                "title": _("Filesize")},),
             ("Date", {
                 "title": _("Published Date")},),
             ("PublishedBy", {
@@ -189,10 +173,19 @@ class ReportsListingView(ListingView):
     def get_filesize(self, pdf):
         """Compute the filesize of the PDF
         """
+        if not pdf:
+            return 0
         try:
-            filesize = float(pdf.get_size())
+            if hasattr(pdf, "size"):
+                filesize = float(pdf.size)
+            elif hasattr(pdf, "getSize"):
+                filesize = float(pdf.getSize())
+            elif hasattr(pdf, "data"):
+                filesize = float(len(pdf.data))
+            else:
+                return 0
             return filesize / 1024
-        except (POSKeyError, TypeError):
+        except (POSKeyError, TypeError, AttributeError):
             return 0
 
     def localize_date(self, date):
@@ -211,24 +204,10 @@ class ReportsListingView(ListingView):
     def folderitem(self, obj, item, index):
         """Augment folder listing item
         """
-
         obj = api.get_object(obj)
-        ar = obj.getAnalysisRequest()
-        # ---- EKLENDİ: Client kullanıcıları için iptal olanları gizle ----
-        review_state = api.get_workflow_status_of(ar)
-        hide_for_clients = {"cancelled", "invalid", "retracted", "verified"}  # sadece 'cancelled' da olabilir
-
-        # >>> Burayı önceki denemedeki api.user.has_role yerine bu şekilde yazın
-        if _is_client_user(self.context) and review_state in hide_for_clients:
-            return None
-        # <<<
-
+        sample = obj.getSample()
         uid = api.get_uid(obj)
-        status_title = review_state.capitalize().replace("_", " ")
-        send_log = obj.getSendLog()
-        # ---- EK BİTİŞ ----
-        uid = api.get_uid(obj)
-        review_state = api.get_workflow_status_of(ar)
+        review_state = api.get_workflow_status_of(sample)
         status_title = review_state.capitalize().replace("_", " ")
         send_log = obj.getSendLog()
 
@@ -240,22 +219,18 @@ class ReportsListingView(ListingView):
             css_class="overlay_panel")
 
         item["replace"]["AnalysisRequest"] = get_link(
-            ar.absolute_url(), value=ar.Title()
+            sample.absolute_url(), value=sample.Title()
         )
 
         # Include Batch information of the primary Sample
-        batch_id = ar.getBatchID()
+        batch_id = sample.getBatchID()
         item["Batch"] = batch_id
         if batch_id:
-            batch = ar.getBatch()
+            batch = sample.getBatch()
             item["replace"]["Batch"] = get_link(
                 batch.absolute_url(), value=batch.Title()
             )
-        # Include Patient Full Name
-        patient_full_name = obj.getPatientFullName()  # This is a placeholder, replace with actual method to get patient full name
-        item["PatientFullName"] = patient_full_name
-        item["TestNames"] = "<br>".join([analysis.Title for analysis in ar.getAnalyses()])
-        
+
         pdf = self.get_pdf(obj)
         filesize = self.get_filesize(pdf)
         if filesize > 0:

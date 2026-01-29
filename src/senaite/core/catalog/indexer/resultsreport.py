@@ -18,36 +18,52 @@
 # Copyright 2018-2025 by it's authors.
 # Some rights reserved, see README and LICENSE.
 
-from bika.lims.interfaces import IARReport
+from bika.lims import api
 from plone.indexer import indexer
+from senaite.core.interfaces import IResultsReport
 
 
-@indexer(IARReport)
+@indexer(IResultsReport)
 def sample_uid(instance):
     """Returns a list of UIDs of the contained Samples
     """
     return instance.getRawContainedAnalysisRequests()
 
 
-@indexer(IARReport)
-def arreport_searchable_text(instance):
+@indexer(IResultsReport)
+def resultsreport_searchable_text(instance):
+    """Searchable text for ResultsReport
+    """
     sample = instance.getAnalysisRequest()
+    if not sample:
+        return u""
+
+    # Metadata is a plain dict (same as AT version)
+    metadata = instance.getMetadata() or {}
 
     tokens = [
         sample.getId(),
+        sample.getBatchID() or "",
+        metadata.get("paperformat", ""),
+        metadata.get("orientation", ""),
+        metadata.get("template", ""),
     ]
 
-    # Hasta adı
-    patient_name = sample.getPatientFullName()
-    if patient_name:
-        tokens.append(unicode(patient_name, "utf-8") if isinstance(patient_name, str) else patient_name)
+    # Extend IDs of contained Samples
+    contained_samples = instance.getContainedAnalysisRequests()
+    tokens.extend([api.get_id(s) for s in contained_samples if s])
 
-    # Test adları
-    for analysis in sample.getAnalyses():
-        try:
-            title = analysis.Title() if callable(analysis.Title) else analysis.Title
-            tokens.append(unicode(title, "utf-8") if isinstance(title, str) else title)
-        except Exception:
-            continue
+    # Extend email recipients
+    recipients = []
+    send_log = instance.getSendLog() or []
+    for log in send_log:
+        email_recipients = log.get("email_recipients", [])
+        if email_recipients:
+            recipients.extend(email_recipients)
+
+    tokens.extend(recipients)
+
+    # Filter out None/empty values and convert to unicode
+    tokens = [api.safe_unicode(t) for t in tokens if t]
 
     return u" ".join(list(set(tokens)))

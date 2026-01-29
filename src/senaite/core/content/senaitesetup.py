@@ -20,6 +20,7 @@
 
 from datetime import timedelta
 
+import six
 from AccessControl import ClassSecurityInfo
 from bika.lims import _
 from bika.lims import api
@@ -41,6 +42,7 @@ from senaite.core.schema import RichTextField
 from senaite.core.schema import UIDReferenceField
 from senaite.core.schema.fields import DataGridField
 from senaite.core.schema.fields import DataGridRow
+from senaite.core.schema.textlinefield import TextLineField
 from senaite.core.z3cform.widgets.datagrid import DataGridWidgetFactory
 from senaite.core.z3cform.widgets.duration.widget import DurationWidgetFactory
 from zope import schema
@@ -181,12 +183,12 @@ class IIDFormattingRecordSchema(Interface):
     """Schema for ID formatting configuration records
     """
 
-    portal_type = schema.TextLine(
+    portal_type = TextLineField(
         title=_(u"Portal Type"),
         required=False,
     )
 
-    form = schema.TextLine(
+    form = TextLineField(
         title=_(u"Format"),
         required=False,
     )
@@ -198,7 +200,7 @@ class IIDFormattingRecordSchema(Interface):
         default="",
     )
 
-    context = schema.TextLine(
+    context = TextLineField(
         title=_(u"Context"),
         required=False,
     )
@@ -210,12 +212,12 @@ class IIDFormattingRecordSchema(Interface):
         default="",
     )
 
-    counter_reference = schema.TextLine(
+    counter_reference = TextLineField(
         title=_(u"Counter Ref"),
         required=False,
     )
 
-    prefix = schema.TextLine(
+    prefix = TextLineField(
         title=_(u"Prefix"),
         required=False,
     )
@@ -844,6 +846,60 @@ class ISetupSchema(model.Schema):
         default=False,
     )
 
+    sidebar_folders = schema.Tuple(
+        title=_(
+            u"title_senaitesetup_sidebar_folders",
+            default=u"Sidebar navigation folders"
+        ),
+        description=_(
+            u"description_senaitesetup_sidebar_folders",
+            default=u"Select which top-level folders should be displayed in "
+                    u"the sidebar navigation. The order of selection determines "
+                    u"the display order in the sidebar. If none are selected, "
+                    u"all folders will be shown in the default order."
+        ),
+        value_type=schema.Choice(
+            vocabulary="senaite.core.vocabularies.top_level_folders"
+        ),
+        required=False,
+        default=("clients", "samples", "methods", "batches", "worksheets"),
+    )
+
+    sidebar_navigation_depth = schema.Int(
+        title=_(
+            u"title_senaitesetup_sidebar_navigation_depth",
+            default=u"Sidebar navigation depth"
+        ),
+        description=_(
+            u"description_senaitesetup_sidebar_navigation_depth",
+            default=u"Maximum depth of the sidebar navigation tree. "
+                    u"Level 1 shows only top-level folders, level 2 includes "
+                    u"their children, and so on."
+        ),
+        required=True,
+        default=1,
+        min=1,
+        max=3,
+    )
+
+    sidebar_skip_types = schema.Tuple(
+        title=_(
+            u"title_senaitesetup_sidebar_skip_types",
+            default=u"Sidebar skipped portal types"
+        ),
+        description=_(
+            u"description_senaitesetup_sidebar_skip_types",
+            default=u"Select which content types should be excluded from the "
+                    u"sidebar navigation. If none are selected, all content "
+                    u"types will be shown."
+        ),
+        value_type=schema.Choice(
+            vocabulary="senaite.core.vocabularies.navigation_portal_types"
+        ),
+        required=False,
+        default=("AnalysisRequest", "Attachment", ),
+    )
+
     # Sampling
     printing_workflow_enabled = schema.Bool(
         title=_(u"Enable the Results Report Printing workflow"),
@@ -1174,6 +1230,9 @@ class ISetupSchema(model.Schema):
             "site_logo",
             "site_logo_css",
             "show_lab_name_in_login",
+            "sidebar_folders",
+            "sidebar_navigation_depth",
+            "sidebar_skip_types",
         ]
     )
 
@@ -1417,6 +1476,49 @@ class Setup(Container):
         """Show/hide the laboratory name in the login page
         """
         mutator = self.mutator("show_lab_name_in_login")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getSidebarFolders(self):
+        """Returns the sidebar navigation folders
+        """
+        accessor = self.accessor("sidebar_folders")
+        return accessor(self) or ()
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setSidebarFolders(self, value):
+        """Set the sidebar navigation folders
+        """
+        mutator = self.mutator("sidebar_folders")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getSidebarNavigationDepth(self):
+        """Returns the sidebar navigation depth
+        """
+        accessor = self.accessor("sidebar_navigation_depth")
+        depth = accessor(self)
+        return depth if depth is not None else 3
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setSidebarNavigationDepth(self, value):
+        """Set the sidebar navigation depth
+        """
+        mutator = self.mutator("sidebar_navigation_depth")
+        return mutator(self, value)
+
+    @security.protected(permissions.View)
+    def getSidebarSkipTypes(self):
+        """Returns the sidebar skipped portal types
+        """
+        accessor = self.accessor("sidebar_skip_types")
+        return accessor(self) or ()
+
+    @security.protected(permissions.ModifyPortalContent)
+    def setSidebarSkipTypes(self, value):
+        """Set the sidebar skipped portal types
+        """
+        mutator = self.mutator("sidebar_skip_types")
         return mutator(self, value)
 
     @security.protected(permissions.View)
@@ -2194,21 +2296,27 @@ class Setup(Container):
     def getIDFormatting(self):
         """Get ID formatting configuration
         Normalizes None values to empty strings for Choice fields
+        Ensures string values are returned as byte strings (not unicode)
         """
         accessor = self.accessor("id_formatting")
         value = accessor(self)
         if not value:
             return DEFAULT_ID_FORMATTING
 
-        # Normalize None values to empty strings for Choice fields
+        # Normalize values: convert `None` to empty strings
+        # In Python 2: convert unicode to bytes to prevent `UnicodeDecodeError`
+        # when formatting with UTF-8 encoded values
+        # In Python 3: keep strings as unicode (no conversion needed)
         normalized = []
         for row in value:
-            normalized_row = dict(row)
-            # Convert None to empty string for Choice fields
-            if normalized_row.get("sequence_type") is None:
-                normalized_row["sequence_type"] = ""
-            if normalized_row.get("counter_type") is None:
-                normalized_row["counter_type"] = ""
+            normalized_row = {}
+            for key, val in row.items():
+                if val is None:
+                    normalized_row[key] = ""
+                elif six.PY2 and isinstance(val, six.text_type):
+                    normalized_row[key] = val.encode("utf-8")
+                else:
+                    normalized_row[key] = val
             normalized.append(normalized_row)
 
         return normalized

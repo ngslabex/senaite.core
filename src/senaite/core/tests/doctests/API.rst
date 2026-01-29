@@ -414,6 +414,29 @@ Catalog brains are also supported::
     >>> api.get_fields(brain).get("ClientID")
     <Field ClientID(string:rw)>
 
+You can also pass a Dexterity portal type name to get the fields for that type
+without needing an instance. This includes all fields from the main schema and
+behaviors::
+
+    >>> from collections import OrderedDict
+    >>> fields = api.get_fields("Contact")
+    >>> isinstance(fields, OrderedDict)
+    True
+
+The fields include all schema fields and behavior fields::
+
+    >>> "title" in fields
+    True
+
+    >>> "description" in fields
+    True
+
+    >>> "email_address" in fields
+    True
+
+Note: For Archetypes types, you must pass an object or brain instance, not a
+portal type string.
+
 
 Getting the ID of a Content
 ...........................
@@ -2045,6 +2068,34 @@ Empty strings are returned unchanged:
     >>> text = ""
     >>> api.text_to_html(text, wrap="div")
     ''
+
+Converting a value to unicode
+.............................
+
+This function converts a value to unicode:
+
+    >>> api.safe_unicode("ä")
+    u'\xe4'
+
+    >>> api.safe_unicode("1337")
+    u'1337'
+
+    >>> api.safe_unicode(u"1337")
+    u'1337'
+
+    >>> api.safe_unicode(1337)
+    u'1337'
+
+    >>> api.safe_unicode(1337L)
+    u'1337'
+
+    >>> api.safe_unicode([1,2,3])
+    u'[1, 2, 3]'
+
+None values just return the default:
+
+    >>> api.safe_unicode(None)
+    u''
 
 
 Converting a string to UTF8

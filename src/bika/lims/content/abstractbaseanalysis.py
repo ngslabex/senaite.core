@@ -26,6 +26,7 @@ from bika.lims.browser.fields import UIDReferenceField
 from bika.lims.browser.widgets.decimal import DecimalWidget
 from bika.lims.browser.widgets.durationwidget import DurationWidget
 from bika.lims.browser.widgets.recordswidget import RecordsWidget
+from senaite.core.api import dtime
 from senaite.core.browser.widgets.referencewidget import ReferenceWidget
 from bika.lims.config import SERVICE_POINT_OF_CAPTURE
 from bika.lims.content.bikaschema import BikaSchema
@@ -1186,7 +1187,15 @@ class AbstractBaseAnalysis(BaseContent):  # TODO BaseContent?  is really needed?
         return: a dictionary with the keys "days", "hours" and "minutes"
         """
         tat = self.Schema().getField("MaxTimeAllowed").get(self)
-        return tat or self.bika_setup.getDefaultTurnaroundTime()
+        if tat:
+            return tat
+
+        value = self.bika_setup.getDefaultTurnaroundTime()
+        if isinstance(value, dict):
+            return value
+
+        # Convert timedelta to dict for AT format:
+        return dtime.timedelta_to_dict(value, default={})
 
     @security.public
     def getMaxHoldingTime(self):
@@ -1201,6 +1210,21 @@ class AbstractBaseAnalysis(BaseContent):  # TODO BaseContent?  is really needed?
         if api.to_minutes(**max_hold_time) <= 0:
             return {}
         return max_hold_time
+
+    def getResultOptionTextByValue(self, value, default=""):
+        """Returns the ResultText for a given ResultValue from the ResultOptions
+
+        :param value: The ResultValue of the option to be retrieved
+        :type value: str
+        :return: Result text
+        """
+        if value is None:
+            return default
+        options = self.getResultOptions() or []
+        for option in options:
+            if api.to_float(option.get("ResultValue")) == api.to_float(value):
+                return option.get("ResultText", default)
+        return default
 
     # TODO Remove. ResultOptionsType field was replaced by ResulType field
     def getResultOptionsType(self):

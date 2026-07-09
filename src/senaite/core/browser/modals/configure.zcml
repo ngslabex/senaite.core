@@ -4,6 +4,9 @@
     xmlns:plone="http://namespaces.plone.org/plone"
     i18n_domain="senaite.core">
 
+  <!-- Include analysis sub-package -->
+  <include package=".analysis"/>
+
   <!-- Modal: Create Worksheet
 
        NOTE: Instead of registering this modal for the
@@ -33,8 +36,16 @@
   <browser:page
       name="set_analysis_conditions"
       for="*"
-      class=".analysis.SetAnalysisConditionsView"
+      class=".conditions.SetAnalysisConditionsView"
       permission="senaite.core.permissions.FieldEditAnalysisConditions"
+      layer="senaite.core.interfaces.ISenaiteCore"
+      />
+
+  <browser:page
+      name="manage_labels_modal"
+      for="*"
+      class=".manage_labels.ManageLabelsModal"
+      permission="senaite.core.permissions.ManageLabels"
       layer="senaite.core.interfaces.ISenaiteCore"
       />
 

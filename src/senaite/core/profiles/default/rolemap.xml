@@ -101,48 +101,6 @@
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
-    <!-- This only applies to Calculation type -->
-    <permission name="CMFEditions: Apply version control" acquire="True">
-      <role name="Analyst"/>
-      <role name="LabClerk"/>
-      <role name="LabManager"/>
-      <role name="Manager"/>
-      <role name="Owner"/>
-      <role name="Preserver"/>
-      <role name="Publisher"/>
-      <role name="RegulatoryInspector"/>
-      <role name="Sampler"/>
-      <role name="SamplingCoordinator"/>
-      <role name="Verifier"/>
-    </permission>
-    <!-- This only applies to Calculation type -->
-    <permission name="CMFEditions: Save new version" acquire="True">
-      <role name="Analyst"/>
-      <role name="LabClerk"/>
-      <role name="LabManager"/>
-      <role name="Manager"/>
-      <role name="Owner"/>
-      <role name="Preserver"/>
-      <role name="Publisher"/>
-      <role name="RegulatoryInspector"/>
-      <role name="Sampler"/>
-      <role name="SamplingCoordinator"/>
-      <role name="Verifier"/>
-    </permission>
-    <permission name="CMFEditions: Access previous versions" acquire="True">
-      <role name="Analyst"/>
-      <role name="LabClerk"/>
-      <role name="LabManager"/>
-      <role name="Manager"/>
-      <role name="Owner"/>
-      <role name="Preserver"/>
-      <role name="Publisher"/>
-      <role name="RegulatoryInspector"/>
-      <role name="Sampler"/>
-      <role name="SamplingCoordinator"/>
-      <role name="Verifier"/>
-    </permission>
-
     <!-- SENAITE PERMISSIONS -->
     <!-- Add Permissions -->
     <permission name="senaite.core: Add Analysis" acquire="False">
@@ -405,10 +363,6 @@
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
-    <permission name="senaite.core: Transition: Reject Worksheet" acquire="False">
-      <role name="LabManager"/>
-      <role name="Manager"/>
-    </permission>
     <permission name="senaite.core: Transition: Remove Worksheet" acquire="False">
       <role name="LabManager"/>
       <role name="Manager"/>
@@ -567,6 +521,10 @@
       <role name="Sampler"/>
       <role name="SamplingCoordinator"/>
       <role name="Verifier"/>
+    </permission>
+    <permission name="senaite.core: Delete Remarks" acquire="False">
+      <role name="LabManager"/>
+      <role name="Manager"/>
     </permission>
     <permission name="senaite.core: Field: Edit Results Interpretation" acquire="False">
       <role name="LabManager"/>
@@ -734,6 +692,23 @@
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>
+    <permission name="senaite.core: Manage Labels" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+    </permission>
+    <permission name="senaite.core: View Labels" acquire="False">
+      <role name="Analyst"/>
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Preserver"/>
+      <role name="Publisher"/>
+      <role name="RegulatoryInspector"/>
+      <role name="Sampler"/>
+      <role name="SamplingCoordinator"/>
+      <role name="Verifier"/>
+    </permission>
     <permission name="senaite.core: Manage Login Details" acquire="False">
       <role name="LabManager"/>
       <role name="Manager"/>
@@ -758,6 +733,24 @@
     </permission>
 
     <!-- View/Action permissions -->
+    <permission name="senaite.core: View Dashboard" acquire="False">
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+    </permission>
+    <permission name="senaite.core: View Navigation" acquire="False">
+      <role name="Analyst"/>
+      <role name="Client"/>
+      <role name="LabClerk"/>
+      <role name="LabManager"/>
+      <role name="Manager"/>
+      <role name="Preserver"/>
+      <role name="Publisher"/>
+      <role name="RegulatoryInspector"/>
+      <role name="Sampler"/>
+      <role name="SamplingCoordinator"/>
+      <role name="Verifier"/>
+    </permission>
     <permission name="senaite.core: Import Instrument Results" acquire="False">
       <role name="Analyst"/>
       <role name="LabManager"/>
@@ -910,6 +903,10 @@
       <role name="SamplingCoordinator"/>
     </permission>
     <permission name="senaite.core: Transition: Dispatch Sample" acquire="False">
+      <role name="LabManager"/>
+      <role name="Manager"/>
+    </permission>
+    <permission name="senaite.core: Transition: Dispose Sample" acquire="False">
       <role name="LabManager"/>
       <role name="Manager"/>
     </permission>

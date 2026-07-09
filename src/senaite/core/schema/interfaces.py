@@ -85,6 +85,11 @@ class IPhoneField(ITextLine):
     """
 
 
+class IColorField(ITextLine):
+    """Color picker field — value is a 6-digit hex string ``#rrggbb``.
+    """
+
+
 class IDurationField(ITimedelta):
     """Senaite Duration field
     """
@@ -97,6 +102,11 @@ class IGPSCoordinatesField(IDict):
 
 class ISelectOtherField(INativeString):
     """Senaite SelectOther field
+    """
+
+
+class IInterimFields(IList):
+    """Senaite Interims field field
     """
 
 

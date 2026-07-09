@@ -149,11 +149,6 @@ class ITemporaryObject(Interface):
     """
 
 
-class IVersionWrapper(Interface):
-    """Content wrapper that allows to retrieve versioned attributes
-    """
-
-
 class ISetup(Interface):
     """Marker interface for setup folder
     """
@@ -166,6 +161,19 @@ class ISamples(Interface):
 
 class ISamplesView(Interface):
     """Marker interface for samples listing view
+    """
+
+
+class ILockingState(Interface):
+    """Marker interface for samples in a state that requires their analyses
+    to be locked (read-only), e.g. disposed. Add-ons can mark their own
+    sample states with an interface that inherits from this one so the
+    analyses get locked without adding a new guard in senaite.core.
+    """
+
+
+class IDisposed(ILockingState):
+    """Marker interface for disposed samples
     """
 
 
@@ -511,6 +519,26 @@ class ISampleTypes(Interface):
     """
 
 
+class IWorksheet(Interface):
+    """Marker interface for Worksheet
+    """
+
+
+class IWorksheets(Interface):
+    """Marker interface for worksheets folder
+    """
+
+
+class IWorksheetLayouts(Interface):
+    """Marker interface for additional Worksheet layouts
+    """
+
+    def getResultLayouts(self):
+        """Returns tuples of layouts for analyses results view
+        where key is the name of the view and value is name of layout
+        """
+
+
 class IWorksheetTemplates(Interface):
     """Marker interface for Worksheet Templates
     """
@@ -518,6 +546,16 @@ class IWorksheetTemplates(Interface):
 
 class IWorksheetTemplate(Interface):
     """Marker interface for Worksheet Template
+    """
+
+
+class ICalculation(Interface):
+    """Marker interface for calculation
+    """
+
+
+class ICalculations(Interface):
+    """Marker interface for calculations folder
     """
 
 
@@ -537,8 +575,17 @@ class ISimpleImage(Interface):
 
 
 class IAfterCreateSampleHook(Interface):
-    """Subscription adapter after the sample was created
+    """Subscription adapter run by sample-creation paths after a
+    new Sample is created (e.g. via the AR add form or the
+    'duplicate_sample' transition).
+
+    Implementations may declare an integer attribute ``sort`` on
+    the instance to influence dispatch order — lower values run
+    first. Hooks that do not set ``sort`` are treated as 10
+    (the default). Use this to pin pre/post-processing hooks
+    relative to the partition-copy default at sort=10.
     """
+
     def update(sample, source=None):
         """Update the sample after it was created
 
@@ -578,3 +625,7 @@ class IMultiUploadFileRemover(Interface):
 
         :param uids: Set or list of UIDs to remove
         """
+
+class ILaboratory(Interface):
+    """Marker interface for lab info
+    """

@@ -25,8 +25,8 @@ from bika.lims import api
 from bika.lims import bikaMessageFactory as _
 from bika.lims import logger
 from bika.lims.browser.fields import UIDReferenceField
-from bika.lims.browser.fields.remarksfield import RemarksField
 from bika.lims.browser.widgets import RemarksWidget
+from senaite.core.browser.fields.remarksfield import RemarksField
 from bika.lims.browser.worksheet.tools import getWorksheetLayouts
 from bika.lims.config import DEFAULT_WORKSHEET_LAYOUT
 from bika.lims.config import PROJECTNAME
@@ -140,6 +140,7 @@ schema['title'].required = 0
 schema['title'].widget.visible = {'edit': 'hidden', 'view': 'invisible'}
 
 
+# TODO: Migrated to DX - https://github.com/senaite/senaite.core/pull/2805
 class Worksheet(BaseFolder, HistoryAwareMixin):
     """A worksheet is a logical group of Analyses accross ARs
     """

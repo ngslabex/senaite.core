@@ -8,6 +8,9 @@
 // needed for Bootstrap toasts
 import $ from "jquery";
 
+// debounce interval (ms) to coalesce rapid DOM mutations before processing
+const MUTATION_DEBOUNCE = 100;
+
 
 class EditForm {
 
@@ -19,8 +22,13 @@ class EditForm {
 
     this.hooked_fields = [];
 
+    // queued DOM mutations, processed debounced in `flush_mutations`
+    this.mutation_queue = [];
+    this.mutation_timer = null;
+
     // bind event handlers
     this.on_mutated = this.on_mutated.bind(this);
+    this.flush_mutations = this.flush_mutations.bind(this);
     this.on_modified = this.on_modified.bind(this);
     this.on_submit = this.on_submit.bind(this);
     this.on_blur = this.on_blur.bind(this);
@@ -642,7 +650,13 @@ class EditForm {
 
     // set reference value
     if (this.is_reference(field)) {
-      field.value = selected.join("\n");
+      // Fallback: Use raw value if selected is not set
+      if (value && selected.length == 0) {
+        selected = value.split("\n");
+      }
+      // XXX: does not work for ReactJS components!
+      // field.value = selected.join("\n");
+      this.native_set_value(field, selected.join("\n"));
     }
     // set select field
     else if (this.is_select(field)) {
@@ -689,6 +703,32 @@ class EditForm {
     }
   }
 
+  /**
+   * set input value with native setter to support ReactJS components
+   *
+   * https://stackoverflow.com/questions/23892547/what-is-the-best-way-to-trigger-onchange-event-in-react-js
+   * TL;DR: React library overrides input value setter
+   */
+  native_set_value(input, value) {
+    let setter = null;
+
+    if (input.tagName === "TEXTAREA") {
+      setter = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, "value")?.set;
+    } else if (input.tagName === "SELECT") {
+      setter = Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, "value")?.set;
+    } else if (input.tagName === "INPUT") {
+      setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value")?.set;
+    } else {
+      input.value = value;
+    }
+
+    if (setter) {
+      setter.call(input, value);
+    }
+
+    const event = new Event("input", { bubbles: true });
+    input.dispatchEvent(event);
+  }
 
   /**
    * trigger `modified` event on the form
@@ -914,6 +954,8 @@ class EditForm {
     if (!this.is_textarea(el)) {
       return false;
     }
+    // NOTE: This class is only used if the field is not hidden.
+    // Otherwise, it behaves like a normal textarea field.
     return el.classList.contains("queryselectwidget-value");
   }
 
@@ -925,19 +967,41 @@ class EditForm {
   }
   /**
    * event handler for `mutated` event
+   *
+   * Queues the mutations and debounces their processing. ReactJS widgets
+   * (e.g. the remarks widget) re-render on each keystroke, which would
+   * otherwise trigger a server notification and a "Loading" flicker per key.
    */
   on_mutated(event) {
     console.debug("EditForm::on_mutated");
-    let form = event.detail.form;
-    let mutations = event.detail.mutations;
+    this.mutation_queue.push({
+      form: event.detail.form,
+      mutations: event.detail.mutations || [],
+    });
+    if (this.mutation_timer) {
+      clearTimeout(this.mutation_timer);
+    }
+    this.mutation_timer = setTimeout(this.flush_mutations, MUTATION_DEBOUNCE);
+  }
+
+  /**
+   * process the queued DOM mutations (debounced)
+   */
+  flush_mutations() {
+    this.mutation_timer = null;
+    let queue = this.mutation_queue;
+    this.mutation_queue = [];
     // reduce multiple mutations on the same node to one
     let seen = [];
-    for (const mutation of mutations) {
-      if (seen.indexOf(mutation.target) > -1) {
-        continue;
+    for (const entry of queue) {
+      let form = entry.form;
+      for (const mutation of entry.mutations) {
+        if (seen.indexOf(mutation.target) > -1) {
+          continue;
+        }
+        seen = seen.concat(mutation.target);
+        this.handle_mutation(form, mutation);
       }
-      seen = seen.concat(mutation.target);
-      this.handle_mutation(form, mutation);
     }
   }
 

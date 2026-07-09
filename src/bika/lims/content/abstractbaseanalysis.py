@@ -53,6 +53,7 @@ from Products.Archetypes.Widget import IntegerWidget
 from Products.Archetypes.Widget import SelectionWidget
 from Products.Archetypes.Widget import StringWidget
 from Products.CMFCore.permissions import View
+from senaite.core.utils import format_supsub_unicode
 from senaite.core.browser.fields.records import RecordsField
 from senaite.core.catalog import SETUP_CATALOG
 from zope.interface import implements
@@ -116,8 +117,25 @@ Unit = StringField(
     )
 )
 
-# A selection of units that are able to update Unit. 
-UnitChoices = RecordsField(
+
+# A selection of units that are able to update Unit.
+class UnitChoicesField(RecordsField):
+    """Custom RecordsField that converts super/subscript
+    HTML tags to Unicode characters for display.
+    """
+
+    def getViewFor(self, instance, idx, subfield,
+                   joinWith=", "):
+        """Return Unicode-formatted value for display
+        """
+        raw = self.getRaw(instance)[idx].get(
+            subfield, "")
+        if type(raw) in (type(()), type([])):
+            raw = joinWith.join(raw)
+        return format_supsub_unicode(raw).strip()
+
+
+UnitChoices = UnitChoicesField(
     "UnitChoices",
     schemata="Description",
     type="UnitChoices",
@@ -703,14 +721,17 @@ ResultOptions = RecordsField(
     'ResultOptions',
     schemata="Result Options",
     type='resultsoptions',
-    subfields=('ResultValue', 'ResultText'),
+    subfields=('ResultValue', 'ResultText', 'AllowManualEntry'),
     required_subfields=('ResultValue', 'ResultText'),
     subfield_labels={'ResultValue': _('Result Value'),
-                     'ResultText': _('Display Value'), },
+                     'ResultText': _('Display Value'),
+                     'AllowManualEntry': _('Allow Manual Entry'), },
+    subfield_types={'AllowManualEntry': 'boolean'},
     subfield_validators={'ResultValue': 'result_options_value_validator',
                          'ResultText': 'result_options_text_validator'},
     subfield_sizes={'ResultValue': 5,
-                    'ResultText': 25,},
+                    'ResultText': 25,
+                    'AllowManualEntry': 8,},
     subfield_maxlength={'ResultValue': 5,
                         'ResultText': 255,},
     widget=RecordsWidget(

@@ -3,7 +3,9 @@ import I18N from "./components/i18n.js";
 import {i18n, _t, _p} from "./i18n-wrapper.js"
 import EditForm from "./components/editform.js"
 import Site from "./components/site.js"
+import CalculationEditForm from "./components/calculationeditform.js"
 import {initSidebar} from "./sidebar"
+import {initWorkflowMenus} from "./workflow-menu"
 import FormTabbing from "./components/formtabbing.js"
 
 
@@ -31,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // BBB: Keep legacy reference for backwards compatibility
   window.sidebar = window.senaite.core.sidebar;
 
+  // Mount React Workflow Menus (lazy transition lookup on click)
+  initWorkflowMenus();
+
   // Ajax Edit Form Handler
   var form = new EditForm({
     form_selectors: [
@@ -47,6 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
       "textarea",
     ]
   })
+
+  document.body.addEventListener("datagrid:loaded", (event) => {
+    // Init custom CalculationEditForm
+    var calculationEditForm = new CalculationEditForm()
+  });
 
   // Init Tooltips
   $(function () {

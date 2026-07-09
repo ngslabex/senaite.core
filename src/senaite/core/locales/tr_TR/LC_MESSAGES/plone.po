@@ -1,14 +1,21 @@
 #
 msgid ""
 msgstr ""
+<<<<<<< HEAD
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2023-12-21 09:59+0000\n"
 "PO-Revision-Date: 2024-02-01 12:18+0300\n"
 "Last-Translator: \n"
+=======
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2026-06-19 06:37+0000\n"
+"PO-Revision-Date: 2018-06-01 18:46+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+>>>>>>> 2.x
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/senaite/teams/87045/tr_TR/)\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "Language-Code: en\n"
@@ -53,10 +60,6 @@ msgstr ""
 msgid "Disable globally"
 msgstr ""
 
-#: senaite/core/profiles/default/registry.xml
-msgid "Displayed content types"
-msgstr ""
-
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:314
 msgid "Enabled"
 msgstr ""
@@ -96,6 +99,10 @@ msgstr ""
 
 #: senaite/core/profiles/default/actions.xml
 msgid "Log out"
+msgstr ""
+
+#: senaite/core/skins/senaite_templates/senaite_widgets/recordswidget.pt:275
+msgid "More"
 msgstr ""
 
 #: senaite/core/browser/portlets/templates/edit-manager-macros.pt:79
@@ -146,10 +153,6 @@ msgstr ""
 
 #: senaite/core/profiles/default/registry.xml
 msgid "Site title"
-msgstr ""
-
-#: senaite/core/profiles/default/registry.xml
-msgid "The content types that should be shown in the navigation and site map."
 msgstr ""
 
 #: senaite/core/browser/contentrules/templates/manage-elements.pt:218
@@ -653,6 +656,7 @@ msgstr ""
 msgid "label_edit"
 msgstr ""
 
+<<<<<<< HEAD
 #. edit the container itself, ${go_here}."
 #. Default: "You are editing the default view of a container. If you wanted to edit the container itself, ${go_here}."
 #: senaite/core/skins/senaite_templates/edit_macros.pt:49
@@ -664,6 +668,8 @@ msgstr ""
 msgid "label_edit_default_view_container_go_here"
 msgstr ""
 
+=======
+>>>>>>> 2.x
 #. Default: "Enable"
 #: senaite/core/browser/contentrules/templates/controlpanel.pt:165
 msgid "label_enable"

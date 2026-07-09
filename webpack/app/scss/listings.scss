@@ -1,5 +1,26 @@
 /* Listing Table Styles  */
 
+/* Iframe-edit pencil icon: hidden by default, shown on row hover */
+.iframe-edit-icon {
+    visibility: hidden;
+    opacity: 0;
+    margin-left: 0.35rem;
+    font-size: 0.8em;
+    color: #888;
+    text-decoration: none;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+        color: #333;
+        text-decoration: none;
+    }
+}
+tr:hover .iframe-edit-icon,
+li:hover .iframe-edit-icon {
+    visibility: visible;
+    opacity: 1;
+}
+
 div.listing-container {
 
     input[type=date] {
@@ -8,4 +29,15 @@ div.listing-container {
     input[type=time] {
         min-width: 75px;
     }
+}
+
+/* Locked rows, e.g. analyses of a disposed sample: mark them with the locked
+   color on the left border (matching the other listing state accents) and
+   highlight the row with a lighter shade on mouseover */
+.ajax-contents-table tr.state-locked,
+.ajax-contents-table td.result.state-locked {
+    border-left: 2px solid $state-locked-color !important;
+}
+.ajax-contents-table tr.state-locked:hover {
+    background-color: $state-locked-active-color;
 }

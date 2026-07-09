@@ -28,6 +28,18 @@
     provides="bika.lims.interfaces.IWorkflowActionAdapter"
     permission="zope.Public" />
 
+  <!-- Sample: "dispose"
+  Note this applies wide, cause at the moment, this action only exists
+  for Analysis Requests and we always want this adapter to be in charge,
+  regardless of the context (Analysis Requests listing, Client folder, etc.) -->
+  <adapter
+    name="workflow_action_dispose"
+    for="*
+         zope.publisher.interfaces.browser.IBrowserRequest"
+    factory=".sample.WorkflowActionDisposeAdapter"
+    provides="bika.lims.interfaces.IWorkflowActionAdapter"
+    permission="zope.Public" />
+
   <!-- Sample: "multi_results"
   Note this applies wide, cause at the moment, this action only exists
   for Analysis Requests and we always want this adapter to be in charge,
@@ -50,18 +62,6 @@
       provides="senaite.core.interfaces.IDynamicLocalRoles"
       factory=".localroles.ClientShareableLocalRoles"
       name="senaite.core.adapter.localroles.clientshareable" />
-
-  <!-- History aware wrapper for AT contents -->
-  <adapter
-      for="Products.Archetypes.interfaces.IBaseObject"
-      provides="senaite.core.interfaces.IVersionWrapper"
-      factory=".versionwrapper.VersionWrapperFactory" />
-
-  <!-- History aware wrapper for DX contents -->
-  <adapter
-      for="plone.dexterity.interfaces.IDexterityContent"
-      provides="senaite.core.interfaces.IVersionWrapper"
-      factory=".versionwrapper.VersionWrapperFactory" />
 
   <!-- Sticker adapter for Samples -->
   <adapter

@@ -19,10 +19,15 @@
 # Some rights reserved, see README and LICENSE.
 
 import collections
+import json
+from cgi import escape as html_escape
 from string import Template
+
+from six.moves.urllib.parse import quote
 
 from bika.lims import _
 from bika.lims import api
+from senaite.core.api import hazard as hazard_api
 from bika.lims.api.security import check_permission
 from bika.lims.config import PRIORITIES
 from bika.lims.interfaces import IBatch
@@ -34,7 +39,7 @@ from bika.lims.utils import get_progress_bar_html
 from bika.lims.utils import getUsers
 from DateTime import DateTime
 from plone.memoize import view
-from senaite.app.listing import ListingView
+from senaite.core.browser.listing.base import ListingView
 from senaite.core.api import dtime
 from senaite.core.catalog import SAMPLE_CATALOG
 from senaite.core.i18n import translate as t
@@ -44,6 +49,9 @@ from senaite.core.permissions import AddAnalysisRequest
 from senaite.core.permissions import TransitionSampleSample
 from senaite.core.permissions.worksheet import can_add_worksheet
 from zope.interface import implementer
+
+# Catalog index / metadata column holding the analysis keywords of a sample
+ANALYSES_KEYWORDS_INDEX = "getAnalysesKeywords"
 
 ANALYSES_NUM_TPL = Template("$not_submitted/$to_be_verified/$verified/$total")
 ANALYSES_NUM_TPL_HTML = Template("""<div class=\"d-flex flex-row\">
@@ -79,6 +87,12 @@ class SamplesView(ListingView):
     """Listing View for Samples (AnalysisRequest content type) in the System
     """
 
+    edit_icon_column = "getId"
+    # Open the SENAITE sample view (not the generic /edit form)
+    edit_view = ""
+    # Pin label chips under the Sample ID column
+    label_target_column = "getId"
+
     def __init__(self, context, request):
         super(SamplesView, self).__init__(context, request)
 
@@ -88,6 +102,9 @@ class SamplesView(ListingView):
             "sort_order": "descending",
             "isRootAncestor": True,  # only root ancestors
         }
+        # Per-request cache for SampleType brain lookups; shared
+        # across all folderitem calls within a single render.
+        self._hazard_cache = {}
 
         self.title = self.context.translate(_("Samples"))
         self.description = ""
@@ -171,26 +188,12 @@ class SamplesView(ListingView):
                 "title": _("Client"),
                 "index": "getClientTitle",
                 "attr": "getClientTitle",
-                "replace_url": "getClientURL",
                 "toggle": True}),
             ("ClientID", {
                 "title": _("Client ID"),
                 "index": "getClientID",
                 "attr": "getClientID",
-                "replace_url": "getClientURL",
                 "toggle": True}),
-            ("Province", {
-                "title": _("Province"),
-                "sortable": True,
-                "index": "getProvince",
-                "attr": "getProvince",
-                "toggle": False}),
-            ("District", {
-                "title": _("District"),
-                "sortable": True,
-                "index": "getDistrict",
-                "attr": "getDistrict",
-                "toggle": False}),
             ("getClientReference", {
                 "title": _("Client Ref"),
                 "sortable": True,
@@ -210,7 +213,6 @@ class SamplesView(ListingView):
             ("getSamplePointTitle", {
                 "title": _("Sample Point"),
                 "sortable": True,
-                "index": "getSamplePointTitle",
                 "toggle": False}),
             ("getStorageLocation", {
                 "title": _("Storage Location"),
@@ -238,6 +240,12 @@ class SamplesView(ListingView):
                 "alt": _("Open / To be verified / Verified / Total"),
                 "sortable": True,
                 "index": "getAnalysesNum",
+                "toggle": False}),
+            ("getAnalysesKeywords", {
+                "title": _("Analyses"),
+                "alt": _("Keywords of the analyses contained in the sample"),
+                "index": "getAnalysesKeywords",
+                "sortable": False,
                 "toggle": False}),
             ("getTemplateTitle", {
                 "title": _("Template"),
@@ -376,6 +384,18 @@ class SamplesView(ListingView):
                 "custom_transitions": [],
                 "columns": self.columns.keys(),
             }, {
+                "id": "disposed",
+                "title": _("Disposed"),
+                "flat_listing": True,
+                "confirm_transitions": ["restore"],
+                "contentFilter": {
+                    "review_state": ("disposed"),
+                    "sort_on": "created",
+                    "sort_order": "descending",
+                },
+                "custom_transitions": [],
+                "columns": self.columns.keys(),
+            }, {
                 "id": "cancelled",
                 "title": _("Cancelled"),
                 "contentFilter": {
@@ -489,17 +509,69 @@ class SamplesView(ListingView):
         if self.flat_listing:
             self.contentFilter.pop("isRootAncestor", None)
 
+    @view.memoize
+    def get_current_column_filters(self):
+        """Return the active column filters for this listing render
+        """
+        return dict(self.get_column_filters() or {})
+
+    def get_active_keywords(self):
+        """Return the analysis keywords the listing is filtered by
+        """
+        raw = self.get_current_column_filters().get(
+            ANALYSES_KEYWORDS_INDEX, "")
+        return [kw.strip() for kw in raw.split(",") if kw.strip()]
+
+    def get_keyword_filter_url(self, keyword):
+        """Return a URL that toggles the keyword in the analyses filter
+
+        The keyword is added when not yet active and removed when already
+        active, so chips accumulate into an AND filter across keywords.
+        """
+        active = self.get_active_keywords()
+        if keyword in active:
+            active = [kw for kw in active if kw != keyword]
+        else:
+            active = active + [keyword]
+        column_filters = dict(self.get_current_column_filters())
+        if active:
+            column_filters[ANALYSES_KEYWORDS_INDEX] = ",".join(sorted(active))
+        else:
+            column_filters.pop(ANALYSES_KEYWORDS_INDEX, None)
+        query = json.dumps(column_filters)
+        return "?{}_column_filters={}".format(self.form_id, quote(query))
+
+    def render_keyword_filter_chip(self, keyword, active_keywords):
+        """Render an analysis keyword as a clickable, toggleable filter chip
+        """
+        href = html_escape(self.get_keyword_filter_url(keyword), quote=True)
+        if keyword in active_keywords:
+            title = t(_("Remove this analysis from the filter"))
+            css = "analysis-keyword-filter active"
+            style = "text-decoration:none;font-weight:bold"
+        else:
+            title = t(_("Filter samples by this analysis"))
+            css = "analysis-keyword-filter"
+            style = "text-decoration:none"
+        title = html_escape(title, quote=True)
+        return (
+            u'<a href="{href}" class="{css}" '
+            u'title="{title}" style="{style}">'
+            u'<code>{keyword}</code></a>'
+        ).format(href=href, css=css, title=title, style=style,
+                 keyword=html_escape(keyword))
+
     def folderitem(self, obj, item, index):
-        # Additional info from AnalysisRequest to be added in the item
-        # generated by default by bikalisting.
-        # Call the folderitem method from the base class
+        # Read everything from brain metadata; only wake the sample
+        # when a value is not available on the brain (sampling workflow
+        # branch below).
         item = super(SamplesView, self).folderitem(obj, item, index)
         if not item:
             return None
 
         item["Creator"] = self.user_fullname(obj.Creator)
-        # If we redirect from the folderitems view we should check if the
-        # user has permissions to medify the element or not.
+
+        # Priority
         priority_sort_key = obj.getPrioritySortkey
         if not priority_sort_key:
             # Default priority is Medium = 3.
@@ -513,8 +585,14 @@ class SamplesView(ListingView):
         item["replace"]["Priority"] = priority_div % (priority, priority_text)
         item["replace"]["getProfilesTitle"] = obj.getProfilesTitleStr
 
-        # returns a list of
-        # [verified, total, not_submitted, to_be_verified]
+        # Client link via memoized UID lookup (no sample wakeup).
+        client = self.get_object_by_uid(obj.getClientUID)
+        if client:
+            item["replace"]["Client"] = get_link_for(client)
+            item["replace"]["ClientID"] = get_link_for(
+                client, value=obj.getClientID)
+
+        # Analyses count — [verified, total, not_submitted, to_be_verified]
         analysesnum = obj.getAnalysesNum
         if analysesnum:
             numbers = {
@@ -528,24 +606,36 @@ class SamplesView(ListingView):
                 "to_be_verified_title": t(_("To be verified")),
             }
             item["getAnalysesNum"] = ANALYSES_NUM_TPL.safe_substitute(numbers)
-            html = ANALYSES_NUM_TPL_HTML.safe_substitute(numbers)
-            item["replace"]["getAnalysesNum"] = html
+            item["replace"]["getAnalysesNum"] = \
+                ANALYSES_NUM_TPL_HTML.safe_substitute(numbers)
         else:
             item["getAnalysesNum"] = ""
+
+        # Analyses keywords (read from brain metadata, list of keywords)
+        keywords = obj.getAnalysesKeywords
+        if not isinstance(keywords, (list, tuple)):
+            keywords = []
+        keywords = sorted(keywords)
+        item["getAnalysesKeywords"] = ", ".join(keywords)
+        active_keywords = self.get_active_keywords()
+        item["replace"]["getAnalysesKeywords"] = " ".join(
+            [self.render_keyword_filter_chip(kw, active_keywords)
+             for kw in keywords])
 
         # Progress
         progress_perc = obj.getProgress
         item["Progress"] = progress_perc
         item["replace"]["Progress"] = get_progress_bar_html(progress_perc)
 
+        # Batch link via memoized UID lookup (no sample wakeup).
         item["BatchID"] = obj.getBatchID
         if obj.getBatchID:
-            item['replace']['BatchID'] = "<a href='%s'>%s</a>" % \
-                                         (obj.getBatchURL, obj.getBatchID)
-        # TODO: SubGroup ???
-        # val = obj.Schema().getField('SubGroup').get(obj)
-        # item['SubGroup'] = val.Title() if val else ''
+            batch = self.get_object_by_uid(obj.getBatchUID)
+            if batch:
+                item["replace"]["BatchID"] = get_link_for(
+                    batch, value=obj.getBatchID)
 
+        # Dates
         item["SamplingDate"] = self.str_date(obj.getSamplingDate)
         item["getDateSampled"] = self.str_date(obj.getDateSampled)
         item["getDateReceived"] = self.str_date(obj.getDateReceived)
@@ -553,10 +643,12 @@ class SamplesView(ListingView):
         item["getDatePublished"] = self.str_date(obj.getDatePublished)
         item["getDateVerified"] = self.str_date(obj.getDateVerified)
 
+        # Printed — getPrinted is a brain metadata column. The sample
+        # is reindexed with idxs=["getPrinted"] in the workflow action
+        # that records a print, which also refreshes metadata.
         if self.is_printing_workflow_enabled:
             item["Printed"] = ""
-            sample = api.get_object(obj)
-            printed = sample.getPrinted()
+            printed = obj.getPrinted
             print_icon = ""
             if printed == "0":
                 print_icon = get_fas_ico("circle-xmark",
@@ -572,15 +664,16 @@ class SamplesView(ListingView):
                     title=t(_("Republished after last print")),
                     css_class="text-warning")
             item["after"]["Printed"] = print_icon
-        item["SamplingDeviation"] = obj.getSamplingDeviationTitle
 
+        item["SamplingDeviation"] = obj.getSamplingDeviationTitle
         item["getStorageLocation"] = obj.getStorageLocationTitle
 
+        # Status icons
         after_icons = ""
-        if obj.assigned_state == 'assigned':
+        if obj.assigned_state == "assigned":
             after_icons += get_image("worksheet.png",
                                      title=t(_("All analyses assigned")))
-        if item["review_state"] == 'invalid':
+        if item["review_state"] == "invalid":
             after_icons += get_image("delete.png",
                                      title=t(_("Results have been withdrawn")))
 
@@ -596,63 +689,65 @@ class SamplesView(ListingView):
         if obj.getInvoiceExclude:
             after_icons += get_image("invoice_exclude.png",
                                      title=t(_("Exclude from invoice")))
-        if obj.getHazardous:
-            after_icons += get_image("hazardous.png",
-                                     title=t(_("Hazardous")))
+
+        for picto in hazard_api.get_pictograms_for_sample(
+                obj, sample_type_cache=self._hazard_cache):
+            after_icons += hazard_api.render_pictogram_img(picto)
 
         if obj.getInternalUse:
             after_icons += get_image("locked.png", title=t(_("Internal use")))
-
         if after_icons:
-            item['after']['getId'] = after_icons
+            item["after"]["getId"] = after_icons
 
-        item['Created'] = self.ulocalized_time(obj.created, long_format=1)
+        item["Created"] = self.ulocalized_time(obj.created, long_format=1)
+
+        # Client contact via memoized UID lookup (no sample wakeup).
         contact = self.get_object_by_uid(obj.getContactUID)
         if contact:
-            item['ClientContact'] = contact.getFullname()
-            item['replace']['ClientContact'] = get_link_for(contact)
+            item["ClientContact"] = contact.getFullname()
+            item["replace"]["ClientContact"] = get_link_for(contact)
         else:
             item["ClientContact"] = ""
-        # TODO-performance: If SamplingWorkflowEnabled, we have to get the
-        # full object to check the user permissions, so far this is
-        # a performance hit.
-        if obj.getSamplingWorkflowEnabled:
 
+        # Sampling workflow — inline edits for Sampler and Date Sampled.
+        # The to_be_sampled branch needs the full sample for the
+        # permission check and getUsers; wake only there.
+        if obj.getSamplingWorkflowEnabled:
             sampler = obj.getSampler
             if sampler:
                 item["getSampler"] = sampler
                 item["replace"]["getSampler"] = self.user_fullname(sampler)
 
-            # sampling workflow - inline edits for Sampler and Date Sampled
             if item["review_state"] == "to_be_sampled":
-                # We need to get the full object in order to check
-                # the permissions
-                full_object = api.get_object(obj)
-                if check_permission(TransitionSampleSample, full_object):
-                    # make fields required and editable
+                sample = api.get_object(obj)
+                if check_permission(TransitionSampleSample, sample):
                     item["required"] = ["getSampler", "getDateSampled"]
                     item["allow_edit"] = ["getSampler", "getDateSampled"]
                     date = obj.getDateSampled or DateTime()
-                    # provide date and time in a valid input format
-                    item["getDateSampled"] = self.to_datetime_input_value(date)
+                    item["getDateSampled"] = \
+                        self.to_datetime_input_value(date)
                     sampler_roles = ["Sampler", "LabManager", ""]
-                    samplers = getUsers(full_object, sampler_roles)
+                    samplers = getUsers(sample, sampler_roles)
                     users = [({
                         "ResultValue": u,
+<<<<<<< HEAD
                         "ResultText": samplers.getValue(u)})
                         for u in samplers]
+=======
+                        "ResultText": samplers.getValue(u)
+                    }) for u in samplers]
+>>>>>>> 2.x
                     item["choices"] = {"getSampler": users}
-                    # preselect the current user as sampler
                     if not sampler and "Sampler" in self.roles:
                         sampler = self.member.getUserName()
                         item["getSampler"] = sampler
 
         # These don't exist on ARs
-        # XXX This should be a list of preservers...
+        # XXX This should be a list of preservers
         item["getPreserver"] = ""
         item["getDatePreserved"] = ""
 
-        # Assign parent and children partitions of this sample
+        # Parent and children partitions
         if self.show_partitions:
             item["parent"] = obj.getRawParentAnalysisRequest
             item["children"] = obj.getDescendantsUIDs or []
@@ -678,6 +773,8 @@ class SamplesView(ListingView):
             remove_filters.append("to_be_preserved")
         if not setup.getRejectionReasons():
             remove_filters.append("rejected")
+        if not setup.getDisposeWorkflowEnabled():
+            remove_filters.append("disposed")
 
         self.review_states = filter(lambda r: r.get("id") not in remove_filters,
                                     self.review_states)
@@ -718,6 +815,17 @@ class SamplesView(ListingView):
                     api.get_url(self.context)),
                 "css_class": "btn btn-outline-secondary",
                 "help": _("Create a new worksheet for the selected samples")
+            })
+
+        # Allow to add labels to the selected samples
+        if self.can_manage_labels():
+            custom_transitions.append({
+                "id": "modal_manage_labels",
+                "title": _("Labels"),
+                "url": "{}/manage_labels_modal".format(
+                    api.get_url(self.context)),
+                "css_class": "btn btn-outline-secondary",
+                "help": _("Add or remove labels on the selected samples"),
             })
 
         for rv in self.review_states:

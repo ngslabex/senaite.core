@@ -730,13 +730,8 @@ class SamplesView(ListingView):
                     samplers = getUsers(sample, sampler_roles)
                     users = [({
                         "ResultValue": u,
-<<<<<<< HEAD
-                        "ResultText": samplers.getValue(u)})
-                        for u in samplers]
-=======
                         "ResultText": samplers.getValue(u)
                     }) for u in samplers]
->>>>>>> 2.x
                     item["choices"] = {"getSampler": users}
                     if not sampler and "Sampler" in self.roles:
                         sampler = self.member.getUserName()

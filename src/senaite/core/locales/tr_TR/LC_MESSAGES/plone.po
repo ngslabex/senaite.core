@@ -1,17 +1,10 @@
 #
 msgid ""
 msgstr ""
-<<<<<<< HEAD
-"Project-Id-Version: \n"
-"POT-Creation-Date: 2023-12-21 09:59+0000\n"
-"PO-Revision-Date: 2024-02-01 12:18+0300\n"
-"Last-Translator: \n"
-=======
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2026-06-19 06:37+0000\n"
 "PO-Revision-Date: 2018-06-01 18:46+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
->>>>>>> 2.x
 "Language-Team: Turkish (Turkey) (https://app.transifex.com/senaite/teams/87045/tr_TR/)\n"
 "Language: tr_TR\n"
 "MIME-Version: 1.0\n"
@@ -656,20 +649,6 @@ msgstr ""
 msgid "label_edit"
 msgstr ""
 
-<<<<<<< HEAD
-#. edit the container itself, ${go_here}."
-#. Default: "You are editing the default view of a container. If you wanted to edit the container itself, ${go_here}."
-#: senaite/core/skins/senaite_templates/edit_macros.pt:49
-msgid "label_edit_default_view_container"
-msgstr ""
-
-#. Default: "go here"
-#: senaite/core/skins/senaite_templates/edit_macros.pt:49
-msgid "label_edit_default_view_container_go_here"
-msgstr ""
-
-=======
->>>>>>> 2.x
 #. Default: "Enable"
 #: senaite/core/browser/contentrules/templates/controlpanel.pt:165
 msgid "label_enable"

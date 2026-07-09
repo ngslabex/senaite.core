@@ -75,7 +75,6 @@ class WorkflowActionDownloadReportsAdapter(RequestContextAware):
                     _("Could not load PDF for sample {}"
                       .format(sample_id)), "warning")
                 continue
-<<<<<<< HEAD
 
             # Hasta + test adlarını güvenli hale getir
             patient_full_name = sample.getPatientFullName() or u"HASTA"
@@ -89,9 +88,6 @@ class WorkflowActionDownloadReportsAdapter(RequestContextAware):
             # Tamamı ASCII olacak dosya adı
             pdf.filename = u"{}-{}-{}.pdf".format(sample_id, safe_patient, safe_titles)
 
-=======
-            pdf.filename = api.safe_unicode("{}.pdf".format(sample_id))
->>>>>>> 2.x
             pdfs.append(pdf)
 
         if len(pdfs) == 1:

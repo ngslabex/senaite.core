@@ -4,6 +4,24 @@ Changelog
 2.7.0 (unreleased)
 ------------------
 
+- #3000 Validate inter-field limits from the instance when there is no form
+- #2999 Pin plone.jsonapi.core to 0.8.0 and add find-links for its sdist
+- #2997 Fix listing widget doctest for the new data-catalog table attribute
+- #2996 Fix missing Dexterity FTI utility registration on typeinfo import
+- #2993 Sync translations and add complete German, Dutch and Spanish translations
+- #2993 Make the dashboard fully translatable
+- #2992 Fix UnicodeEncodeError in Organization.getPrintAddress with non-ASCII address
+- #2988 Fix worksheet template analysis filtering for selected samples
+- #2985 Add a SENAITE-specific Manage Viewlets view
+- #2971 Make the Sample Dispatch workflow optional and lock analyses on dispatch
+- #2970 Add an optional Sample Dispose workflow
+- #2986 Fix UnicodeDecodeError from non-ASCII organisation titles in the title index
+- #2979 Show precise element-level audit log diffs for lists and record fields
+- #2984 Hide the Manage Portlets menu from the toolbar
+- #2983 Fix HiddenProfiles list to actually hide bundled add-on profiles
+- #2981 Forward results override flags to custom auto-import adapters
+- #2962 Remove the obsolete RegulatoryInspector role
+- #2976 Surface orphaned sample partitions as top-level rows in listings
 - #2982 Fix auto log-off logging out active users (session refresh interval)
 - #2978 Move front page and landing page fields to the Appearance fieldset
 - #2973 Add PublishTraverseView/JSONView base browser views for AJAX endpoints

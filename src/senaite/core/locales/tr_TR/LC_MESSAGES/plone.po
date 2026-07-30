@@ -890,8 +890,6 @@ msgstr ""
 msgid "need_an_account"
 msgstr ""
 
-<<<<<<< HEAD
-=======
 #. Default: "No file"
 #: senaite/core/z3cform/widgets/datagrid/datagridrow_file_display.pt:27
 msgid "no_file"
@@ -902,7 +900,6 @@ msgstr ""
 msgid "no_image"
 msgstr ""
 
->>>>>>> upstream/2.x
 #. Default: "Plain Text"
 #: senaite/core/skins/senaite_templates/tinymce_wysiwyg_support.pt:61
 msgid "plain_text"

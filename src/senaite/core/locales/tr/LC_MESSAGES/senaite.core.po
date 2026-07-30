@@ -123,7 +123,7 @@ msgstr ""
 
 #: senaite/core/browser/worksheets/worksheet/analyses_listing.py:91
 msgid "+-"
-msgstr "+-"
+msgstr ""
 
 # senaite.app.listing: Column-filter row — boolean select placeholder
 msgid "-- Select --"
@@ -302,11 +302,7 @@ msgstr "Tüm testler için açıklama alanı ekle"
 msgid "Add custom CSS rules for the Logo, e.g. height:15px; width:150px;"
 msgstr ""
 
-<<<<<<< HEAD
-#: senaite/core/browser/controlpanel/labels.py:52
-=======
-#: senaite/core/browser/controlpanel/labels/view.py:53
->>>>>>> upstream/2.x
+#: senaite/core/browser/controlpanel/labels/view.py:52
 msgid "Add default selectable labels"
 msgstr ""
 
@@ -389,10 +385,6 @@ msgstr "Departmanın Tüm Testleri"
 
 #: senaite/core/browser/samples/view.py:723
 msgid "All analyses assigned"
-msgstr "Tüm testler sevk edildi"
-
-# senaite.app.listing: Column config — empty state when no columns are visible
-msgid "All columns are hidden."
 msgstr ""
 
 #: bika/lims/content/abstractbaseanalysis.py:335
@@ -456,30 +448,10 @@ msgstr "Testi çalışan"
 #: senaite/core/browser/samples/view.py:248
 #: senaite/core/browser/viewlets/sampleanalyses.py:33
 msgid "Analyses"
-msgstr "Testler"
+msgstr ""
 
-<<<<<<< HEAD
 #: bika/lims/browser/analysisrequest/templates/analysisrequest_retract_pdf.pt:115
-=======
-#: senaite/core/browser/dashboard/dashboard.py:485
-msgid "Analyses assigned to a worksheet, awaiting results"
-msgstr ""
-
-#: senaite/core/browser/dashboard/dashboard.py:498
-msgid "Analyses included in a published report"
-msgstr ""
-
-#: senaite/core/browser/dashboard/dashboard.py:480
-msgid "Analyses not yet assigned to a worksheet"
-msgstr ""
-
-#: senaite/core/browser/samples/rejection/templates/rejection_report.pt:132
->>>>>>> upstream/2.x
 msgid "Analyses requested"
-msgstr "Testler"
-
-#: senaite/core/browser/dashboard/dashboard.py:494
-msgid "Analyses that have been verified"
 msgstr ""
 
 #: senaite/core/browser/viewlets/templates/attachments.pt:66
@@ -600,10 +572,6 @@ msgstr "Uygula"
 
 #: senaite/core/browser/worksheets/worksheet/templates/add_analyses.pt:52
 msgid "Apply template"
-msgstr "Şablonu uygula"
-
-# senaite.app.listing: Saved filter presets — apply button tooltip
-msgid "Apply this filter"
 msgstr ""
 
 #: bika/lims/browser/fields/interimfieldsfield.py:61
@@ -626,15 +594,12 @@ msgstr "Sevk Edildi"
 
 #: bika/lims/browser/analyses/view.py:1666
 msgid "Assigned to: ${worksheet_id}"
-msgstr "Sevk edildiği ID: ${worksheet_id}"
+msgstr ""
 
-<<<<<<< HEAD
 #: senaite/core/browser/dashboard/dashboard.py:122
 msgid "Assignment pending"
-msgstr "Bekleyen görevler"
+msgstr ""
 
-=======
->>>>>>> upstream/2.x
 #: bika/lims/validators.py:465
 msgid "At least, two options for choices field are required"
 msgstr ""
@@ -842,10 +807,6 @@ msgstr ""
 
 #: bika/lims/browser/fields/coordinatefield.py:39
 msgid "Bearing"
-msgstr "Etki"
-
-#: senaite/core/browser/dashboard/dashboard.py:139
-msgid "Biannual"
 msgstr ""
 
 #: senaite/core/z3cform/widgets/address.py:122
@@ -1145,15 +1106,6 @@ msgstr "Şehir"
 
 #: bika/lims/config.py:125
 msgid "Classic"
-msgstr "Klasik"
-
-# senaite.app.listing: Column-filter row — clear button tooltip
-msgid "Clear filter"
-msgstr ""
-
-# senaite.app.listing: Search box — undo button tooltip when only clearing
-# search
-msgid "Clear search"
 msgstr ""
 
 # senaite.app.listing: ButtonBar
@@ -1505,11 +1457,7 @@ msgstr "Ülke"
 msgid "Create Invoice PDF"
 msgstr ""
 
-<<<<<<< HEAD
-#: senaite/core/browser/samples/templates/partition_magic.pt:245
-=======
-#: senaite/core/browser/samples/templates/partition_magic.pt:264
->>>>>>> upstream/2.x
+#: senaite/core/browser/samples/templates/partition_magic.pt:256
 msgid "Create Partitions"
 msgstr "Numune Eşle"
 
@@ -1936,15 +1884,9 @@ msgstr ""
 msgid "Dependent Analyses"
 msgstr "Bağımlı Analizler"
 
-<<<<<<< HEAD
 #: senaite/core/behaviors/label.py:111
-#: senaite/core/browser/controlpanel/instrumentlocations.py:65
-#: senaite/core/browser/controlpanel/interpretationtemplates.py:59
-=======
-#: senaite/core/behaviors/label.py:119
 #: senaite/core/browser/controlpanel/departments/view.py:72
-#: senaite/core/browser/controlpanel/labels/view.py:63
->>>>>>> upstream/2.x
+#: senaite/core/browser/controlpanel/labels/view.py:62
 msgid "Description"
 msgstr "Tanım"
 
@@ -2277,10 +2219,6 @@ msgstr ""
 
 #: bika/lims/browser/publish/reports_listing.py:88
 msgid "Email sent"
-msgstr "E-Posta Gönderildi mi?"
-
-#: bika/lims/api/snapshot.py:585
-msgid "Empty"
 msgstr ""
 
 #: bika/lims/validators.py:456
@@ -2619,10 +2557,6 @@ msgstr ""
 #: bika/lims/content/instrumentcalibration.py:78
 #: bika/lims/content/instrumentmaintenancetask.py:65
 msgid "From"
-msgstr "Kimden"
-
-#: senaite/core/browser/dashboard/dashboard.py:134
-msgid "From ${from} to ${to} (updated every 2 hours)"
 msgstr ""
 
 #: senaite/core/browser/clients/client/contacts/templates/login_details.pt:63
@@ -3180,10 +3114,6 @@ msgstr ""
 #: senaite/core/browser/viewlets/templates/attachments.pt:67
 #: senaite/core/browser/viewlets/templates/worksheet_attachments.pt:42
 msgid "Keywords"
-msgstr "Anahtar kelimeler"
-
-#: senaite/core/browser/samples/view.py:249
-msgid "Keywords of the analyses contained in the sample"
 msgstr ""
 
 #: bika/lims/browser/templates/analysisservice_info.pt:100
@@ -3221,12 +3151,8 @@ msgstr "Lab Ürünleri"
 msgid "Lab URL"
 msgstr "Lab Linki"
 
-<<<<<<< HEAD
-#: senaite/core/behaviors/label.py:107 senaite/core/extender/label.py:76
-=======
-#: senaite/core/behaviors/label.py:115
-#: senaite/core/extender/label.py:80
->>>>>>> upstream/2.x
+#: senaite/core/behaviors/label.py:107
+#: senaite/core/extender/label.py:76
 #: senaite/core/profiles/default/types/Label.xml
 msgid "Label"
 msgstr "Etiket"
@@ -3235,11 +3161,7 @@ msgstr "Etiket"
 msgid "Label configuration"
 msgstr ""
 
-<<<<<<< HEAD
-#: senaite/core/content/label.py:59
-=======
-#: senaite/core/content/label.py:93
->>>>>>> upstream/2.x
+#: senaite/core/content/label.py:65
 msgid "Label names must be unique"
 msgstr ""
 
@@ -3251,15 +3173,9 @@ msgstr ""
 msgid "Labeled Objects"
 msgstr ""
 
-<<<<<<< HEAD
-#: senaite/core/browser/controlpanel/labels.py:51
+#: senaite/core/browser/controlpanel/labels/view.py:51
 #: senaite/core/browser/label/labeled_objects.py:65
 #: senaite/core/extender/label.py:57
-=======
-#: senaite/core/browser/controlpanel/labels/view.py:52
-#: senaite/core/browser/label/labeled_objects.py:66
-#: senaite/core/browser/samples/view.py:875
->>>>>>> upstream/2.x
 msgid "Labels"
 msgstr ""
 
@@ -3767,11 +3683,11 @@ msgid "Multiple values control type is not supported for choices"
 msgstr ""
 
 #: senaite/core/profiles/default/actions.xml
-msgid "My organization"
+msgid "My Organization"
 msgstr ""
 
-# senaite.app.listing: Saved filter presets — default name when saving
-msgid "My filter"
+#: senaite/core/profiles/default/actions.xml
+msgid "My Profile"
 msgstr ""
 
 #: bika/lims/content/supplier.py:63
@@ -3955,10 +3871,6 @@ msgstr ""
 
 #: senaite/core/browser/samples/partition_magic.py:111
 msgid "No partitions were created"
-msgstr "Eşleştirme yapılmadı"
-
-#: senaite/core/api/remarks.py:493
-msgid "No remarks yet"
 msgstr ""
 
 #: bika/lims/browser/publish/emailview.py:176
@@ -4129,10 +4041,7 @@ msgstr ""
 msgid "Only to empty or zero fields"
 msgstr ""
 
-<<<<<<< HEAD
-=======
-#: senaite/core/browser/samples/view.py:652
->>>>>>> upstream/2.x
+#: senaite/core/browser/samples/view.py:525
 #: senaite/core/profiles/default/workflows/senaite_batch_workflow/definition.xml
 #: senaite/core/profiles/default/workflows/senaite_worksheet_workflow/definition.xml
 msgid "Open"
@@ -4154,15 +4063,11 @@ msgstr ""
 msgid "Open email form to send the selected reports to the recipients. This will also publish the contained samples of the reports after the email was successfully sent."
 msgstr ""
 
-<<<<<<< HEAD
-#: bika/lims/browser/worksheet/views/add_analyses.py:99
-=======
 #: senaite/core/browser/dashboard/dashboard.py:522
 msgid "Open worksheets with analyses awaiting results"
 msgstr ""
 
-#: bika/lims/browser/worksheet/views/add_analyses.py:98
->>>>>>> upstream/2.x
+#: bika/lims/browser/worksheet/views/add_analyses.py:99
 msgid "Order"
 msgstr "Sipariş"
 
@@ -4343,10 +4248,6 @@ msgstr ""
 
 #: senaite/core/browser/samples/templates/dispatch_samples.pt:71
 msgid "Please write a comment where the listed sample(s) are dispatched"
-msgstr "Lütfen listelenen numunelerin sevkedildiği yeri yorum olarak yazınız."
-
-#: senaite/core/browser/samples/templates/dispose_samples.pt:73
-msgid "Please write a comment where the listed sample(s) are disposed"
 msgstr ""
 
 #: bika/lims/browser/templates/analysisservice_info.pt:96
@@ -4473,11 +4374,7 @@ msgstr ""
 msgid "Preventive maintenance procedure"
 msgstr ""
 
-<<<<<<< HEAD
-#: senaite/core/browser/samples/templates/partition_magic.pt:239
-=======
-#: senaite/core/browser/samples/templates/partition_magic.pt:258
->>>>>>> upstream/2.x
+#: senaite/core/browser/samples/templates/partition_magic.pt:250
 msgid "Preview"
 msgstr "Önizle"
 
@@ -4627,10 +4524,6 @@ msgstr "Yayınlanma Tarihi"
 
 #: bika/lims/profiles/default/types/AnalysisRequest.xml
 msgid "Published results"
-msgstr "Yayınlanan Sonuçlar"
-
-#: senaite/core/browser/dashboard/dashboard.py:448
-msgid "Published samples whose reports have not been printed yet"
 msgstr ""
 
 #: bika/lims/browser/workflow/client.py:122
@@ -5142,10 +5035,6 @@ msgstr ""
 
 #: bika/lims/browser/worksheet/views/folder.py:111
 msgid "Routine Analyses"
-msgstr "Rutin Testler"
-
-#: bika/lims/api/snapshot.py:555
-msgid "Row ${num}"
 msgstr ""
 
 #: senaite/core/configure.zcml:56
@@ -5450,22 +5339,9 @@ msgstr "Kaydet"
 
 #: bika/lims/browser/analysisrequest/templates/ar_add2.pt:738
 msgid "Save and Copy"
-msgstr "Kaydet ve Kopyala"
+msgstr ""
 
-<<<<<<< HEAD
 #: bika/lims/browser/workflow/__init__.py:209
-=======
-# senaite.app.listing: Saved filter presets — footer button to save the
-# current view
-msgid "Save current view"
-msgstr ""
-
-# senaite.app.listing: Saved filter presets — toggle title + menu header
-msgid "Saved filters"
-msgstr ""
-
-#: bika/lims/browser/workflow/__init__.py:206
->>>>>>> upstream/2.x
 msgid "Saved items: {}"
 msgstr ""
 
@@ -6457,15 +6333,9 @@ msgstr ""
 msgid "Tip. Attached documents will not be loaded unless they are present in the instance."
 msgstr ""
 
-<<<<<<< HEAD
-#: senaite/core/browser/controlpanel/interpretationtemplates.py:56
-#: senaite/core/browser/controlpanel/labels.py:59
+#: senaite/core/browser/controlpanel/labels/view.py:59
 #: senaite/core/browser/label/labeled_objects.py:58
-=======
-#: senaite/core/browser/controlpanel/labels/view.py:60
-#: senaite/core/browser/label/labeled_objects.py:59
 #: senaite/core/browser/widgets/referencewidget.py:55
->>>>>>> upstream/2.x
 msgid "Title"
 msgstr "Başlık"
 
@@ -6497,14 +6367,6 @@ msgstr "Depolanacak"
 
 #: senaite/core/browser/samples/view.py:298
 msgid "To Be Sampled"
-msgstr "Numune Alınacak"
-
-#: senaite/core/browser/dashboard/dashboard.py:93
-msgid "To be Published"
-msgstr ""
-
-#: senaite/core/browser/dashboard/dashboard.py:89
-msgid "To be Verified"
 msgstr ""
 
 #: bika/lims/content/analysiscategory.py:48
@@ -6539,12 +6401,7 @@ msgstr ""
 msgid "Toggle visibility of standard sample header fields"
 msgstr ""
 
-<<<<<<< HEAD
-#: bika/lims/browser/analysisrequest/templates/ar_add2.pt:632
-#: bika/lims/browser/analysisrequest/templates/invoice_content.pt:226
-=======
-#: senaite/core/browser/samples/view.py:650
->>>>>>> upstream/2.x
+#: senaite/core/browser/samples/view.py:523
 msgid "Total"
 msgstr "Toplam"
 
@@ -7020,27 +6877,15 @@ msgstr "Doğrulandı"
 
 #: bika/lims/browser/analysisrequest/templates/invoice_content.pt:133
 msgid "Verified By"
-msgstr "Doğrulayan"
-
-#: senaite/core/browser/dashboard/dashboard.py:428
-msgid "Verified samples ready to be published"
 msgstr ""
 
 #: senaite/core/profiles/default/workflows/senaite_analysis_workflow/definition.xml
 #: senaite/core/profiles/default/workflows/senaite_duplicateanalysis_workflow/definition.xml
 #: senaite/core/profiles/default/workflows/senaite_referenceanalysis_workflow/definition.xml
 msgid "Verify"
-msgstr "Doğrula"
-
-<<<<<<< HEAD
-#: bika/lims/browser/auditlog.py:79
-=======
-#: senaite/core/browser/dashboard/dashboard.py:109
-msgid "Verify Results"
 msgstr ""
 
-#: bika/lims/browser/auditlog.py:80
->>>>>>> upstream/2.x
+#: bika/lims/browser/auditlog.py:79
 #: bika/lims/browser/templates/analysisservice_info.pt:174
 #: bika/lims/controlpanel/auditlog.py:72
 msgid "Version"
@@ -7178,14 +7023,6 @@ msgstr ""
 #: senaite/core/browser/dashboard/dashboard.py:107
 #: senaite/core/profiles/default/types/Worksheets.xml
 msgid "Worksheets"
-msgstr "Çalışmalar"
-
-#: senaite/core/browser/dashboard/dashboard.py:531
-msgid "Worksheets that have been verified"
-msgstr ""
-
-#: senaite/core/browser/dashboard/dashboard.py:526
-msgid "Worksheets whose results are awaiting verification"
 msgstr ""
 
 #: senaite/core/content/supplier.py:166
@@ -7388,15 +7225,6 @@ msgstr ""
 
 #: bika/lims/browser/templates/referencesample_view.pt:127
 msgid "deactivate"
-msgstr "Pasifleştir"
-
-#. Default: "Sample disposed after the retention period."
-#: senaite/core/browser/samples/templates/dispose_samples.pt:66
-msgid "default_dispose_reason"
-msgstr ""
-
-#: senaite/core/api/remarks.py:485
-msgid "deleted by {user} at {time}"
 msgstr ""
 
 #. Default: "Attached labels"
@@ -11555,11 +11383,6 @@ msgstr ""
 #. Default: "This sample has been dispatched by ${actor} on ${date}"
 #: senaite/core/browser/viewlets/templates/sample_dispatched_viewlet.pt:14
 msgid "this_sample_has_been_dispatched_by"
-msgstr "Sevkeden ${actor}, Sevk tarihi ${date}"
-
-#. Default: "This sample has been disposed by ${actor} on ${date}"
-#: senaite/core/browser/viewlets/templates/sample_disposed_viewlet.pt:14
-msgid "this_sample_has_been_disposed_by"
 msgstr ""
 
 #. Default: "${I}:${M} ${p}"
